@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/screens/auth_screens/onboarding.dart';
-import 'package:lavanya_mess/screens/main_screens/home.dart';
+import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -42,11 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    isBoarding ? const Home() : const Onboarding(),
+                    isBoarding ? const Dashboard() : const Onboarding(),
               ),
             );
           });
-          // Return a placeholder widget as the build method should return a widget immediately
           return Scaffold(
             body: Container(
               decoration: const BoxDecoration(

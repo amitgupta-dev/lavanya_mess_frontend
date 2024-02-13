@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lavanya_mess/widgets/auth_layout.dart';
+import 'package:lavanya_mess/widgets/custom_button.dart';
+import 'package:lavanya_mess/widgets/custom_input.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -7,23 +10,98 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthLayout(
-      child: Expanded(
-        flex: 8,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Material(
-            elevation: 2,
-            borderRadius: BorderRadius.circular(40),
-            color: const Color.fromRGBO(255, 255, 255, 0.9),
-            child: const SizedBox(
-              width: double.infinity,
-              child: Center(
-                child: Text("Signup Page"),
-              ),
-            ),
-          ),
+      heading: Text(
+        "Lavanya",
+        style: GoogleFonts.leckerliOne(
+          color: const Color(0xFFff4747),
+          fontSize: 40,
         ),
       ),
+      children: [
+        const CustomInputWidget(text: "Name"),
+        const CustomInputWidget(text: "Email"),
+        const CustomInputWidget(text: "Phone"),
+        const CustomInputWidget(text: "Password"),
+        CustomButton(
+          text: "Signup",
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        const Row(
+          children: [
+            Expanded(
+              child: Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'OR',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ),
+            Expanded(
+              child: Divider(
+                height: 1,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                  ),
+                  child: Image.asset(
+                    'assets/icons/google.png',
+                    height: 38,
+                    width: 38,
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                  ),
+                  child: Image.asset(
+                    'assets/icons/facebook.png',
+                    height: 38,
+                    width: 38,
+                  )),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Already have an account ?",
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Login"),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/screens/auth_screens/splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -9,9 +7,16 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
+        padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
-            child: Text('Dashboard'),
+          Container(
+            color: const Color(0xFFff4747),
+            child: DrawerHeader(
+              child: Container(
+                width: double.infinity,
+                color: const Color(0xFFff4747),
+              ),
+            ),
           ),
           ListTile(
             title: const Text('Item 1'),
@@ -20,18 +25,8 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Clear State'),
-            onTap: () async {
-              final prefs = await SharedPreferences.getInstance();
-              prefs.setBool('boarding', false);
-              if (!context.mounted) return;
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SplashScreen(),
-                ),
-              );
-            },
+            title: const Text('Item 2'),
+            onTap: () {},
           ),
         ],
       ),

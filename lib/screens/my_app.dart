@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/screens/auth_screens/change_password.dart';
+import 'package:lavanya_mess/screens/auth_screens/forgot_password.dart';
 import 'package:lavanya_mess/screens/auth_screens/login.dart';
 import 'package:lavanya_mess/screens/auth_screens/signup.dart';
 import 'package:lavanya_mess/screens/auth_screens/splash_screen.dart';
@@ -13,10 +15,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Lavanya Mess',
       routes: {
-        '/login': (context) => const SplashScreen(),
+        '/': (context) => const SplashScreen(),
         '/onboarding': (context) => const Onboarding(),
-        '/': (context) => const Login(),
+        '/login': (context) => const Login(),
         '/signup': (context) => const Signup(),
+        '/forgotPassword': (context) => const ForgotPassword(),
+        '/changePassword': (context) => const ChangePassword(),
       },
     );
   }

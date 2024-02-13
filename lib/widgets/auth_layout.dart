@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 
 class AuthLayout extends StatelessWidget {
-  final Widget child;
-  const AuthLayout({Key? key, required this.child}) : super(key: key);
+  final Widget heading;
+  final List<Widget> children;
+
+  const AuthLayout({Key? key, required this.children, required this.heading})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         children: [
           Container(
             color: const Color.fromARGB(255, 241, 236, 236),
+            width: double.infinity,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  constraints: const BoxConstraints(maxWidth: 460),
-                  child: Image.asset('assets/images/ic_chicken.png'),
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  ),
+                  alignment: Alignment.topLeft,
+                  child: Image.asset(screenWidth > 470
+                      ? 'assets/images/ic_chicken_big.png'
+                      : 'assets/images/ic_chicken.png'),
                 ),
                 Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  alignment: Alignment.bottomRight,
                   child: Image.asset('assets/images/ic_bottom_bg.png'),
                 ),
               ],
@@ -29,12 +41,37 @@ class AuthLayout extends StatelessWidget {
           Column(
             children: [
               Expanded(
-                flex: 3,
+                flex: MediaQuery.of(context).size.height >= 600 ? 2 : 3,
                 child: Container(
                   color: Colors.transparent,
                 ),
               ),
-              child,
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Material(
+                  elevation: 10,
+                  borderRadius: const BorderRadius.all(Radius.circular(24)),
+                  child: Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(
+                      maxWidth: 400,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: heading,
+                          ),
+                          ...children,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Expanded(
                 flex: 2,
                 child: Container(
