@@ -10,7 +10,6 @@ class Product extends StatelessWidget {
       onTap: () {
         showModalBottomSheet(
           context: context,
-          isScrollControlled: true,
           builder: (context) => const ProductBottomSheet(),
         );
       },

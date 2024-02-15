@@ -47,7 +47,7 @@ class CartItem extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600),
+                              fontSize: 18, fontWeight: FontWeight.w500),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,8 +61,10 @@ class CartItem extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               height: 30,
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black45),
-                                  borderRadius: BorderRadius.circular(5)),
+                                  border: Border.all(
+                                    color: const Color(0xffff4747),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
                                   const Padding(
@@ -74,20 +76,17 @@ class CartItem extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                    width: 40,
+                                    width: 35,
                                     decoration: const BoxDecoration(
-                                        border: Border.symmetric(
-                                            vertical: BorderSide(
-                                                color: Colors.black45))),
-                                    child: TextFormField(
-                                      style: const TextStyle(fontSize: 14.0),
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
+                                      border: Border.symmetric(
+                                        vertical: BorderSide(
+                                            color: Colors.transparent),
                                       ),
+                                    ),
+                                    child: const Text(
+                                      '555',
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                   const Padding(
@@ -100,7 +99,7 @@ class CartItem extends StatelessWidget {
                                   )
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],

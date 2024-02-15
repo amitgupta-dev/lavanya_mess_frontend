@@ -13,9 +13,9 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 0;
-  Widget screenWidget = const Cart();
-  String pageName = 'My Cart';
+  int _selectedIndex = 2;
+  Widget screenWidget = const Orders();
+  String pageName = 'My Orders';
 
   void _onItemTapped(int index) {
     switch (index) {
