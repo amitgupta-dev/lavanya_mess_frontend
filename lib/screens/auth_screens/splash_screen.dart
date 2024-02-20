@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _isBoarding = _prefs.then((prefs) {
-      return prefs.getBool('boarding') ?? false;
+      return prefs.getBool('isBoarding') ?? false;
     });
   }
 
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    isBoarding ? const Dashboard() : const Onboarding(),
+                    isBoarding ? const Onboarding() : const Dashboard(),
               ),
             );
           });

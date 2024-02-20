@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/screens/main_screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -57,14 +56,9 @@ class _OnboardingState extends State<Onboarding> {
                     child: TextButton(
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('boarding', true);
+                        prefs.setBool('isBoarding', false);
                         if (!context.mounted) return;
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Home(),
-                          ),
-                        );
+                        Navigator.pushNamed(context, '/dashboard');
                       },
                       child: const Text(
                         "Get Started",

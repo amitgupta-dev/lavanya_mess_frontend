@@ -14,8 +14,8 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 2;
-  Widget screenWidget = const Orders();
-  String pageName = 'My Orders';
+  Widget screenWidget = const Home();
+  String pageName = 'Home';
 
   void _onItemTapped(int index) {
     switch (index) {
@@ -27,12 +27,12 @@ class _DashboardState extends State<Dashboard> {
       case 1:
         setState(() {
           screenWidget = const Cart();
-          pageName = 'Cart';
+          pageName = 'My Cart';
         });
       case 2:
         setState(() {
           screenWidget = const Orders();
-          pageName = 'Orders';
+          pageName = 'My Orders';
         });
       default:
         setState(() {
@@ -62,7 +62,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
-              color: Colors.white, // Set icon color here
+              color: Colors.white,
             );
           },
         ),

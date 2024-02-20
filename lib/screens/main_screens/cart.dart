@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/widgets/cart_item.dart';
+import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -75,9 +79,15 @@ class Cart extends StatelessWidget {
                   ),
                 ),
               ),
+              Text(
+                json.encode(auth.loginData),
+              ),
+              Text(
+                json.encode(auth.authData),
+              ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: Container(
+                child: SizedBox(
                   width: 180,
                   height: 40,
                   child: TextButton(
@@ -89,12 +99,34 @@ class Cart extends StatelessWidget {
                         const Color(0xFFff4747),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      auth.fetchData();
+                    },
                     child: const Text(
                       'Checkout ➜',
                       style: TextStyle(fontSize: 17),
                     ),
                   ),
+                ),
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xffffffff),
+                  ),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xFFff4747),
+                  ),
+                ),
+                onPressed: () {
+                  auth.login({
+                    "email": "mrocculty@gmail.com",
+                    "password": "Amitg1@gmail.com",
+                  });
+                },
+                child: const Text(
+                  'login ➜',
+                  style: TextStyle(fontSize: 17),
                 ),
               ),
             ],
