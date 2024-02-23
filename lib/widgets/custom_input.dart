@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 class CustomInputWidget extends StatelessWidget {
   final String text;
-  const CustomInputWidget({Key? key, required this.text}) : super(key: key);
+  final Function(String)? onChanged;
+  const CustomInputWidget({Key? key, required this.text, this.onChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        onChanged: onChanged,
         decoration: InputDecoration(
           labelText: text,
           labelStyle: const TextStyle(fontSize: 15),

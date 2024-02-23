@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/providers/auth_provider.dart';
+import 'package:lavanya_mess/screens/auth_screens/login.dart';
+import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -13,14 +17,15 @@ class _OnboardingState extends State<Onboarding> {
   final PageController _controller = PageController();
   bool isLastPage = false;
 
-  // @override
-  // void dispose() {
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -56,9 +61,26 @@ class _OnboardingState extends State<Onboarding> {
                     child: TextButton(
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('isBoarding', false);
+                        prefs.setBool('doneBoarding', true);
+                        String? token = prefs.getString('token');
+
+                        if (token != null) {
+                          int? statusCode = await auth.fetchMyData(token);
+                          if (statusCode == 200 && context.mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
+                            );
+                          }
+                        }
                         if (!context.mounted) return;
-                        Navigator.pushNamed(context, '/dashboard');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Login(),
+                            ));
                       },
                       child: const Text(
                         "Get Started",

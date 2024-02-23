@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lavanya_mess/screens/main_screens/home.dart';
+import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/widgets/auth_layout.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  String _email = "";
+  String _password = "";
+
+  @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
     return AuthLayout(
       heading: Text(
@@ -20,16 +30,49 @@ class Login extends StatelessWidget {
         ),
       ),
       children: [
-        const CustomInputWidget(text: "Email"),
-        const CustomInputWidget(text: "Password"),
+        CustomInputWidget(
+          text: "Email",
+          onChanged: (value) {
+            setState(() {
+              _email = value;
+            });
+          },
+        ),
+        CustomInputWidget(
+          text: "Password",
+          onChanged: (value) {
+            setState(() {
+              _password = value;
+            });
+          },
+        ),
         CustomButton(
           text: "Login",
           onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(),
-                ));
+            if (_email.isNotEmpty && _password.isNotEmpty) {
+              final Map<String, String> body = {
+                "email": _email,
+                "password": _password
+              };
+              auth.login(context, body);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                      'Please fill both the email and password fields'),
+                  backgroundColor: Colors.teal,
+                  behavior: SnackBarBehavior.floating,
+                  action: SnackBarAction(
+                    label: 'Dismiss',
+                    disabledTextColor: Colors.white,
+                    textColor: Colors.yellow,
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                  ),
+                ),
+              );
+            }
           },
         ),
         Padding(

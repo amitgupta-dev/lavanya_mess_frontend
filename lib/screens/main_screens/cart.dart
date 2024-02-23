@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lavanya_mess/providers/auth_provider.dart';
+import 'package:lavanya_mess/services/api_services.dart';
 import 'package:lavanya_mess/widgets/cart_item.dart';
-import 'package:provider/provider.dart';
-import 'dart:convert';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -79,12 +76,6 @@ class Cart extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                json.encode(auth.loginData),
-              ),
-              Text(
-                json.encode(auth.authData),
-              ),
               Align(
                 alignment: Alignment.bottomRight,
                 child: SizedBox(
@@ -99,9 +90,7 @@ class Cart extends StatelessWidget {
                         const Color(0xFFff4747),
                       ),
                     ),
-                    onPressed: () {
-                      auth.fetchData();
-                    },
+                    onPressed: () {},
                     child: const Text(
                       'Checkout ➜',
                       style: TextStyle(fontSize: 17),
@@ -118,11 +107,39 @@ class Cart extends StatelessWidget {
                     const Color(0xFFff4747),
                   ),
                 ),
-                onPressed: () {
-                  auth.login({
-                    "email": "mrocculty@gmail.com",
-                    "password": "Amitg1@gmail.com",
-                  });
+                onPressed: () async {
+                  try {
+                    final userData = await ApiService.request(
+                        'user/65d087dda3c458de55d03faf');
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error fetching user data: $userData'),
+                          backgroundColor: Colors.teal,
+                          behavior: SnackBarBehavior.floating,
+                          action: SnackBarAction(
+                            label: 'Dismiss',
+                            disabledTextColor: Colors.white,
+                            textColor: Colors.yellow,
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                    debugPrint('User data: $userData');
+                  } catch (e) {
+                    debugPrint('Error fetching user data: $e');
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error fetching user data: $e'),
+                        ),
+                      );
+                    }
+                  }
                 },
                 child: const Text(
                   'login ➜',

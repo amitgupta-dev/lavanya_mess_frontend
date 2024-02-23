@@ -1,83 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
+import 'package:lavanya_mess/services/api_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
-  dynamic _authData;
-  dynamic _loginData;
-  dynamic _error;
+  dynamic _userData;
 
-  dynamic get authData => _authData;
-  dynamic get loginData => _loginData;
-  dynamic get error => _error;
+  dynamic get authData => _userData;
 
-  Future<void> savePrefsValue(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
-  }
-
-  Future<String?> getPrefsValue(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
-  }
-
-  void fetchData() async {
-    final token = await getPrefsValue('token');
-    final response = await http.get(
-      Uri.parse('http://192.168.65.231:5000/api/user'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode < 300) {
-      _authData = json.decode(response.body);
-      debugPrint(json.encode(authData));
+  Future<int?> fetchMyData(String token) async {
+    final response = await ApiService.request('/user', token: token);
+    if (response['statusCode'] == 200) {
+      _userData = response['data']['user'];
+      debugPrint(response['data']['user'].toString());
       notifyListeners();
+      return response['statusCode'];
     } else {
-      _error = json.decode(response.body);
       notifyListeners();
+      return response['statusCode'];
     }
   }
 
-  void login(dynamic body) async {
-    debugPrint(json.encode(body));
+  void login(BuildContext context, dynamic body) async {
+    debugPrint('nice');
     final response =
-        await http.post(Uri.parse('http://192.168.65.231:5000/api/auth/login'),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(body));
-    if (response.statusCode == 200) {
+        await ApiService.request('/auth/login', method: 'POST', body: body);
+
+    debugPrint(response['data']['user'].toString());
+    if (response['statusCode'] == 201) {
+      _userData = response['data']['user'];
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'token', json.decode(response.body)['user']['token']);
-      _loginData = json.decode(response.body);
-      debugPrint(json.encode(loginData));
-      notifyListeners();
-    } else {
-      _error = json.decode(response.body);
-      notifyListeners();
-    }
-  }
+      await prefs.setString('token', response['data']['user']['token']);
 
-  void signup(dynamic body) async {
-    debugPrint(json.encode(body));
-    final response =
-        await http.post(Uri.parse('http://192.168.65.231:5000/api/auth/signup'),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(body));
-    if (response.statusCode == 200) {
-      _authData = json.decode(response.body);
-      debugPrint(json.encode(authData));
       notifyListeners();
+      if (!context.mounted) return;
+      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Dashboard(),
+        ),
+      );
     } else {
-      _error = json.decode(response.body);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error: ${response['data']['message']}"),
+            backgroundColor: Colors.teal,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Dismiss',
+              disabledTextColor: Colors.white,
+              textColor: Colors.yellow,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
+      }
       notifyListeners();
     }
   }

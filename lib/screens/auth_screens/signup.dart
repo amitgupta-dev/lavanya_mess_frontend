@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/widgets/auth_layout.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/custom_input.dart';
-import 'package:provider/provider.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
     return AuthLayout(
       heading: Text(
         "Lavanya",
@@ -27,13 +24,7 @@ class Signup extends StatelessWidget {
         const CustomInputWidget(text: "Password"),
         CustomButton(
           text: "Signup",
-          onPressed: () {
-            auth.login({
-              "email": "mrocculty@gmail.com",
-              "password": "Amitg1@gmail.com",
-            });
-            Navigator.pop(context);
-          },
+          onPressed: () {},
         ),
         const Row(
           children: [

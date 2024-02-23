@@ -13,7 +13,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
   Widget screenWidget = const Home();
   String pageName = 'Home';
 
