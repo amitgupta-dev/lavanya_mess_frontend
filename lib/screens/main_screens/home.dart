@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lavanya_mess/widgets/plan_card.dart';
 import 'package:lavanya_mess/widgets/product.dart';
 import 'package:lavanya_mess/widgets/search_input.dart';
 
@@ -30,7 +33,7 @@ class Home extends StatelessWidget {
           children: [
             const SearchInput(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               child: Material(
                 borderRadius: const BorderRadius.all(
                   Radius.circular(20),
@@ -75,47 +78,69 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Mess Plans',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 20, top: 30),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: ElevatedButton(
-                      style: const ButtonStyle(
-                        shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      PlanCard(
+                        name: 'Platinum',
+                        price: '₹4000/Month',
+                        color: Colors.redAccent,
+                        icon: Image.asset(
+                          'assets/icons/platinum.png',
+                          width: 60,
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        'Veg',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: ElevatedButton(
-                      style: const ButtonStyle(
-                        shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                        padding: MaterialStatePropertyAll(
-                          EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
+                      PlanCard(
+                        name: 'Gold',
+                        price: '₹3000/Month',
+                        color: Colors.redAccent,
+                        icon: Image.asset(
+                          'assets/icons/gold.png',
+                          width: 60,
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        'Non-Veg',
+                      PlanCard(
+                        name: 'Simple',
+                        price: '₹2500/Month',
+                        color: Colors.redAccent,
+                        icon: Image.asset(
+                          'assets/icons/simple.png',
+                          width: 60,
+                        ),
                       ),
-                    ),
-                  ),
-                ],
+                      PlanCard(
+                        name: 'One Timer',
+                        price: '₹1500/Month',
+                        color: Colors.redAccent,
+                        icon: Image.asset(
+                          'assets/icons/one_timer.png',
+                          width: 60,
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Recommended for you',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             GridView.count(
@@ -128,12 +153,6 @@ class Home extends StatelessWidget {
               childAspectRatio: getAspectRatio(),
               crossAxisCount: colCount > 0 ? colCount : 1,
               children: const <Widget>[
-                Product(),
-                Product(),
-                Product(),
-                Product(),
-                Product(),
-                Product(),
                 Product(),
                 Product(),
                 Product(),

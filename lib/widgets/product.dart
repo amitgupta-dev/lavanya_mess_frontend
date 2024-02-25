@@ -8,7 +8,8 @@ class Product extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showModalBottomSheet(
+        showModalBottomSheet<dynamic>(
+          isScrollControlled: true,
           context: context,
           builder: (context) => const ProductBottomSheet(),
         );
@@ -99,7 +100,7 @@ class Product extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Expanded(
                                 flex: 1,
@@ -111,8 +112,12 @@ class Product extends StatelessWidget {
                                       fontSize: 13, color: Colors.black45),
                                 ),
                               ),
+                              const SizedBox(
+                                width: 4,
+                              ),
                               Container(
-                                height: 28,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
                                 decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),

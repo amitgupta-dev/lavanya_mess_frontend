@@ -15,11 +15,14 @@ class MyDrawer extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(auth.authData['avatar']),
+              backgroundImage: NetworkImage(auth.authData?['avatar']),
             ),
-            accountEmail: Text(auth.authData['email']),
+            accountEmail: Text(
+              auth.authData?['email'],
+              style: const TextStyle(fontSize: 14),
+            ),
             accountName: Text(
-              auth.authData['name'],
+              auth.authData?['name'],
               style: const TextStyle(fontSize: 18),
             ),
             decoration: const BoxDecoration(
@@ -27,17 +30,78 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.house),
+            leading: const Icon(
+              Icons.add_location_alt_outlined,
+              color: Color(0xddff4747),
+            ),
             title: const Text(
-              'Houses',
+              'Location',
               style: TextStyle(fontSize: 16),
             ),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.apartment),
+            leading: const Icon(
+              Icons.restaurant_menu_outlined,
+              color: Color(0xddff4747),
+            ),
             title: const Text(
-              'Apartments',
+              'Mess Plans',
+              style: TextStyle(fontSize: 16),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.payments_outlined,
+              color: Color(0xddff4747),
+            ),
+            title: const Text(
+              'Payments',
+              style: TextStyle(fontSize: 16),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.support_agent_outlined,
+              color: Color(0xddff4747),
+            ),
+            title: const Text(
+              'Help & Support',
+              style: TextStyle(fontSize: 16),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.info_outlined,
+              color: Color(0xddff4747),
+            ),
+            title: const Text(
+              'About Us',
+              style: TextStyle(fontSize: 16),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.thumb_up_outlined,
+              color: Color(0xddff4747),
+            ),
+            title: const Text(
+              'Rate Us',
+              style: TextStyle(fontSize: 16),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.logout_outlined,
+              color: Color(0xddff4747),
+            ),
+            title: const Text(
+              'Logout',
               style: TextStyle(fontSize: 16),
             ),
             onTap: () {},
