@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lavanya_mess/services/api_services.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
 import 'package:lavanya_mess/widgets/cart_item.dart';
+import 'package:provider/provider.dart';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final CartProvider cart = Provider.of<CartProvider>(context);
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
             children: [
-              const CartItem(),
-              const CartItem(),
-              const CartItem(),
-              const CartItem(),
-              const CartItem(),
+              ...cart.cartItems.map((item) => CartItem(data: item)).toList(),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -40,7 +38,7 @@ class Cart extends StatelessWidget {
                         children: [
                           Text('Items Total',
                               style: GoogleFonts.leckerliOne(fontSize: 18)),
-                          Text('₹500',
+                          Text('₹${cart.getTotalPrice()}',
                               style: GoogleFonts.leckerliOne(fontSize: 18)),
                         ],
                       ),
@@ -58,7 +56,7 @@ class Cart extends StatelessWidget {
                         children: [
                           Text('Discount',
                               style: GoogleFonts.leckerliOne(fontSize: 18)),
-                          Text('₹100',
+                          Text('₹${cart.getDiscount()}',
                               style: GoogleFonts.leckerliOne(fontSize: 18)),
                         ],
                       ),
@@ -68,7 +66,8 @@ class Cart extends StatelessWidget {
                         children: [
                           Text('Total',
                               style: GoogleFonts.leckerliOne(fontSize: 20)),
-                          Text('₹450',
+                          Text(
+                              '₹${cart.getTotalPrice() + 50 - cart.getDiscount()}',
                               style: GoogleFonts.leckerliOne(fontSize: 20)),
                         ],
                       ),
@@ -96,54 +95,6 @@ class Cart extends StatelessWidget {
                       style: TextStyle(fontSize: 17),
                     ),
                   ),
-                ),
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(
-                    const Color(0xffffffff),
-                  ),
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color(0xFFff4747),
-                  ),
-                ),
-                onPressed: () async {
-                  try {
-                    final userData = await ApiService.request(
-                        'user/65d087dda3c458de55d03faf');
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Error fetching user data: $userData'),
-                          backgroundColor: Colors.teal,
-                          behavior: SnackBarBehavior.floating,
-                          action: SnackBarAction(
-                            label: 'Dismiss',
-                            disabledTextColor: Colors.white,
-                            textColor: Colors.yellow,
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                          ),
-                        ),
-                      );
-                    }
-                    debugPrint('User data: $userData');
-                  } catch (e) {
-                    debugPrint('Error fetching user data: $e');
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Error fetching user data: $e'),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: const Text(
-                  'login ➜',
-                  style: TextStyle(fontSize: 17),
                 ),
               ),
             ],

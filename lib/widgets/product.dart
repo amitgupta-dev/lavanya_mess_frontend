@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/models/product_model.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
 import 'package:lavanya_mess/widgets/product_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 class Product extends StatelessWidget {
-  const Product({super.key});
+  final ProductModel productData;
+  const Product({super.key, required this.productData});
 
   @override
   Widget build(BuildContext context) {
+    CartProvider cart = Provider.of<CartProvider>(context);
     return GestureDetector(
       onTap: () {
         showModalBottomSheet<dynamic>(
           isScrollControlled: true,
           context: context,
-          builder: (context) => const ProductBottomSheet(),
+          builder: (context) => ProductBottomSheet(data: productData),
         );
       },
       child: Material(
@@ -34,10 +39,10 @@ class Product extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       image: DecorationImage(
-                          image: AssetImage('assets/images/banner.jpg'),
+                          image: NetworkImage(productData.thumbnail),
                           fit: BoxFit.cover),
                     ),
                   ),
@@ -50,50 +55,52 @@ class Product extends StatelessWidget {
                   child: SizedBox(
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Expanded(
+                            Expanded(
                               flex: 1,
                               child: Text(
-                                'Chicken Curry Nikalo Bhai Abhi ke abhi',
+                                productData.name,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
-                                color: Colors.black87,
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 0,
-                                  horizontal: 5,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '4.3 ',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                            productData.rating.avg != null
+                                ? Container(
+                                    decoration: const BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                      color: Colors.black87,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 5,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            productData.rating.avg.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.star_outlined,
+                                            color: Colors.white,
+                                            size: 12,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Icon(
-                                      Icons.star_outlined,
-                                      color: Colors.white,
-                                      size: 12,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  )
+                                : Container(),
                           ],
                         ),
                         Padding(
@@ -102,50 +109,86 @@ class Product extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Expanded(
+                              Expanded(
                                 flex: 1,
                                 child: Text(
-                                  'Chicken curry is a popular dish enjoyed in various cuisines around the world, including Indian, Thai, Jamaican, and others. While the specific ingredients and cooking methods can vary greatly depending on regional preferences and traditions, chicken curry typically consists of chicken pieces cooked in a flavorful sauce or gravy made with a variety of spices, herbs, vegetables, and sometimes coconut milk or yogurt.',
+                                  productData.description,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13, color: Colors.black45),
                                 ),
                               ),
                               const SizedBox(
                                 width: 4,
                               ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 6),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  color: Color(0xFFff4747),
-                                ),
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all<
-                                        EdgeInsetsGeometry>(EdgeInsets.zero),
-                                  ),
-                                  onPressed: () {},
-                                  child: const Row(
-                                    children: [
-                                      Icon(
-                                        Icons.shopping_bag_outlined,
-                                        color: Color(0xffffffff),
-                                        size: 18,
+                              cart.inCart(productData.id)
+                                  ? Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6),
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        color: Color(0xFFff4747),
                                       ),
-                                      Text(
-                                        ' Add',
-                                        style: TextStyle(
-                                          color: Color(0xffffffff),
+                                      child: TextButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                                  EdgeInsetsGeometry>(
+                                              EdgeInsets.zero),
+                                        ),
+                                        onPressed: () {},
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_bag_outlined,
+                                              color: Color(0xffffffff),
+                                              size: 18,
+                                            ),
+                                            Text(
+                                              ' Go to Cart',
+                                              style: TextStyle(
+                                                color: Color(0xffffffff),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                                    )
+                                  : Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6),
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        color: Color(0xFFff4747),
+                                      ),
+                                      child: TextButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                                  EdgeInsetsGeometry>(
+                                              EdgeInsets.zero),
+                                        ),
+                                        onPressed: () {
+                                          cart.addProduct(productData);
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_bag_outlined,
+                                              color: Color(0xffffffff),
+                                              size: 18,
+                                            ),
+                                            Text(
+                                              ' Add',
+                                              style: TextStyle(
+                                                color: Color(0xffffffff),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             ],
                           ),
                         ),

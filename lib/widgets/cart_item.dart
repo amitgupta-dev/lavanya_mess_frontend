@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/models/cart_item.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class CartItem extends StatelessWidget {
-  const CartItem({super.key});
+  final CartItemModel data;
+  const CartItem({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    CartProvider cart = Provider.of<CartProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Material(
@@ -22,11 +27,11 @@ class CartItem extends StatelessWidget {
                   aspectRatio: 1.4,
                   child: Container(
                     clipBehavior: Clip.antiAlias,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('assets/images/banner.jpg'),
+                          image: NetworkImage(data.product.thumbnail),
                           fit: BoxFit.cover),
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(10),
                       ),
                     ),
@@ -42,19 +47,19 @@ class CartItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Chicken Curry Nikal Bhai abhi ke abhi jaldi kya',
+                        Text(
+                          data.product.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w500),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              '₹ 500',
-                              style: TextStyle(
+                            Text(
+                              '₹ ${data.product.price * data.quantity}',
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                             Container(
@@ -67,12 +72,20 @@ class CartItem extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 5),
-                                    child: Icon(
-                                      Icons.remove,
-                                      size: 18,
+                                  InkWell(
+                                    onTap: () {
+                                      cart.decreaseQuantity(data.product.id);
+                                    },
+                                    borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        topLeft: Radius.circular(10)),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 18,
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -83,18 +96,26 @@ class CartItem extends StatelessWidget {
                                             color: Colors.transparent),
                                       ),
                                     ),
-                                    child: const Text(
-                                      '555',
-                                      style: TextStyle(fontSize: 16),
+                                    child: Text(
+                                      data.quantity.toString(),
+                                      style: const TextStyle(fontSize: 16),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 5),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 18,
+                                  InkWell(
+                                    onTap: () {
+                                      cart.increaseQuantity(data.product.id);
+                                    },
+                                    borderRadius: const BorderRadius.only(
+                                        bottomRight: Radius.circular(10),
+                                        topRight: Radius.circular(10)),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 18,
+                                      ),
                                     ),
                                   )
                                 ],

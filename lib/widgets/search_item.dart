@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/models/product_model.dart';
+import 'package:lavanya_mess/widgets/product_bottom_sheet.dart';
 
 class SearchItem extends StatelessWidget {
-  const SearchItem({super.key});
+  final ProductModel data;
+  const SearchItem({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        showModalBottomSheet<dynamic>(
+          isScrollControlled: true,
+          context: context,
+          builder: (context) => ProductBottomSheet(data: data),
+        );
+      },
       borderRadius: BorderRadius.circular(10),
       child: Container(
         padding: const EdgeInsets.all(5),
@@ -26,7 +35,7 @@ class SearchItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
                       clipBehavior: Clip.antiAlias,
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
@@ -34,7 +43,7 @@ class SearchItem extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage('assets/images/banner.jpg'),
+                                image: NetworkImage(data.thumbnail),
                                 fit: BoxFit.cover),
                             shape: BoxShape.circle),
                       ),
@@ -43,21 +52,21 @@ class SearchItem extends StatelessWidget {
                   const SizedBox(
                     width: 10,
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 1,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Chicken Curry ',
+                          data.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w500),
                         ),
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               'Price : ',
                               style: TextStyle(
                                 fontSize: 14,
@@ -65,14 +74,14 @@ class SearchItem extends StatelessWidget {
                                 color: Color(0xaa000000),
                               ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.currency_rupee_outlined,
                               color: Color(0xaa000000),
                               size: 14,
                             ),
                             Text(
-                              '300',
-                              style: TextStyle(
+                              data.price.toString(),
+                              style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xaa000000)),

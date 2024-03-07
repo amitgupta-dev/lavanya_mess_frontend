@@ -6,6 +6,7 @@ import 'package:lavanya_mess/screens/auth_screens/signup.dart';
 import 'package:lavanya_mess/screens/auth_screens/splash_screen.dart';
 import 'package:lavanya_mess/screens/auth_screens/onboarding.dart';
 import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
+import 'package:lavanya_mess/screens/others/location.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,13 +18,13 @@ class MyApp extends StatelessWidget {
       title: 'Lavanya Mess',
       home: const SplashScreen(),
       routes: {
-        // '/': (context) => const SplashScreen(),
         '/onboarding': (context) => const Onboarding(),
         '/login': (context) => const Login(),
         '/signup': (context) => const Signup(),
         '/forgotPassword': (context) => const ForgotPassword(),
         '/changePassword': (context) => const ChangePassword(),
         '/dashboard': (context) => const Dashboard(),
+        '/location': (context) => const Location(),
       },
     );
   }

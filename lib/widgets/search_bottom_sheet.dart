@@ -1,10 +1,54 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:lavanya_mess/models/product_model.dart';
+import 'package:lavanya_mess/services/api_services.dart';
 import 'package:lavanya_mess/widgets/search_item.dart';
 
-class SearchBottomSheet extends StatelessWidget {
+class SearchBottomSheet extends StatefulWidget {
   const SearchBottomSheet({super.key});
+
+  @override
+  State<SearchBottomSheet> createState() => _SearchBottomSheetState();
+}
+
+class _SearchBottomSheetState extends State<SearchBottomSheet> {
+  List<ProductModel> products = [];
+
+  final _searchQueryController = TextEditingController();
+  Timer? _debounce;
+  final int _debounceTime = 2000;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchQueryController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchQueryController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(Duration(milliseconds: _debounceTime), () async {
+      if (_searchQueryController.text.isNotEmpty) {
+        // Perform your API call with _searchQueryController.text
+        var response = await ApiService.request(
+            '/product/search?tags=${_searchQueryController.text}');
+        if (response['statusCode'] == 200) {
+          final List<dynamic> productsData = response['data']['products'];
+          setState(() {
+            products = productsData
+                .map((data) => ProductModel.fromJson(data))
+                .toList();
+          });
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +70,7 @@ class SearchBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     elevation: 5,
                     child: TextFormField(
+                      controller: _searchQueryController,
                       decoration: const InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black38),
@@ -50,23 +95,12 @@ class SearchBottomSheet extends StatelessWidget {
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(5),
-                  child: const SingleChildScrollView(
+                  child: SingleChildScrollView(
                     child: Wrap(
                       children: [
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
-                        SearchItem(),
+                        ...products
+                            .map((item) => SearchItem(data: item))
+                            .toList()
                       ],
                     ),
                   ),

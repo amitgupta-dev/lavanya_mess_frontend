@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://192.168.65.231:5000/api';
+  static const String _baseUrl = 'http://localhost:5000/api';
 
   static Future<Map<String, dynamic>> request(String endpoint,
       {String method = 'GET',
@@ -11,6 +12,10 @@ class ApiService {
     final url = '$_baseUrl$endpoint';
     late http.Response response;
 
+    if (token == null) {
+      final prefs = await SharedPreferences.getInstance();
+      token = prefs.getString('token');
+    }
     switch (method) {
       case 'GET':
         response = await http.get(Uri.parse(url), headers: {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
+import 'package:lavanya_mess/widgets/location_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -30,6 +31,55 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            onTap: () {
+              // Padding(
+              //   padding: const EdgeInsets.all(10),
+              //   child: Material(
+              //     clipBehavior: Clip.antiAlias,
+              //     borderRadius: BorderRadius.circular(10),
+              //     elevation: 5,
+              //     child: MouseRegion(
+              //       cursor: SystemMouseCursors.text,
+              //       child: GestureDetector(
+              //         onTap: () {
+              showModalBottomSheet<dynamic>(
+                isScrollControlled: true,
+                context: context,
+                // useSafeArea: true,
+                builder: (context) => const LocationBottomSheet(),
+              );
+              //         },
+              //         child: Container(
+              //           padding: const EdgeInsets.symmetric(
+              //               horizontal: 15, vertical: 8),
+              //           decoration: BoxDecoration(
+              //             border: Border.all(color: Colors.black38),
+              //             borderRadius: BorderRadius.circular(10),
+              //           ),
+              //           child: const Row(
+              //             mainAxisAlignment:
+              //                 MainAxisAlignment.spaceBetween,
+              //             children: [
+              //               Text(
+              //                 'Search',
+              //                 style: TextStyle(
+              //                     color: Color.fromRGBO(0, 0, 0, 0.5),
+              //                     fontSize: 18,
+              //                     fontWeight: FontWeight.w500),
+              //               ),
+              //               Icon(
+              //                 color: Color(0xFFff4747),
+              //                 Icons.search_outlined,
+              //                 size: 30,
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            },
             leading: const Icon(
               Icons.add_location_alt_outlined,
               color: Color(0xddff4747),
@@ -38,7 +88,6 @@ class MyDrawer extends StatelessWidget {
               'Location',
               style: TextStyle(fontSize: 16),
             ),
-            onTap: () {},
           ),
           ListTile(
             leading: const Icon(

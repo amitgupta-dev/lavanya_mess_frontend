@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/models/product_model.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 
-class ProductBottomSheet extends StatelessWidget {
-  const ProductBottomSheet({super.key});
+class ProductBottomSheet extends StatefulWidget {
+  final ProductModel data;
+  const ProductBottomSheet({super.key, required this.data});
 
   @override
+  State<ProductBottomSheet> createState() => _ProductBottomSheetState();
+}
+
+class _ProductBottomSheetState extends State<ProductBottomSheet> {
+  int quantity = 1;
+  @override
   Widget build(BuildContext context) {
+    final CartProvider cart = Provider.of<CartProvider>(context);
     return Wrap(
       children: [
         Expanded(
@@ -45,8 +56,9 @@ class ProductBottomSheet extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15)),
-                              child: Image.asset(
-                                'assets/images/banner.jpg',
+                              child: Image.network(
+                                widget.data.thumbnail,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -54,7 +66,7 @@ class ProductBottomSheet extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 5),
-                            child: const Column(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
@@ -62,14 +74,14 @@ class ProductBottomSheet extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                        'Chicken Curry',
-                                        style: TextStyle(
+                                        widget.data.name,
+                                        style: const TextStyle(
                                           fontSize: 22,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
-                                    Padding(
+                                    const Padding(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 10),
                                       child: Row(children: [
@@ -144,11 +156,11 @@ class ProductBottomSheet extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.all(5),
+                          Padding(
+                            padding: const EdgeInsets.all(5),
                             child: Text(
-                              'Chicken curry is a popular dish enjoyed in various cuisines around the world, including Indian, Thai, Jamaican, and others. While the specific ingredients and cooking methods can vary greatly depending on regional preferences and traditions, chicken curry typically consists of chicken pieces cooked in a flavorful sauce or gravy made with a variety of spices, herbs, vegetables, and sometimes coconut milk or yogurt.',
-                              style: TextStyle(
+                              widget.data.description,
+                              style: const TextStyle(
                                   color: Color.fromARGB(166, 0, 0, 0)),
                             ),
                           ),
@@ -164,52 +176,8 @@ class ProductBottomSheet extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           width: double.infinity,
-          child: Row(
-            children: [
-              Container(
-                clipBehavior: Clip.antiAlias,
-                height: 40,
-                decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xffff4747)),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Icon(
-                        Icons.remove,
-                        size: 18,
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        border: Border.symmetric(
-                          vertical: BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                      child: const Text(
-                        '555',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Icon(
-                        Icons.add,
-                        size: 18,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
+          child: cart.inCart(widget.data.id)
+              ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   height: 40,
                   decoration: BoxDecoration(
@@ -223,14 +191,101 @@ class ProductBottomSheet extends StatelessWidget {
                     ),
                     onPressed: () {},
                     child: const Text(
-                      'Add Item ₹1000',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      'Go to Cart',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
+                )
+              : Row(
+                  children: [
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xffff4747)),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                quantity = quantity == 1 ? 1 : --quantity;
+                              });
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              child: Icon(
+                                Icons.remove,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              border: Border.symmetric(
+                                vertical: BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                            child: Text(
+                              quantity.toString(),
+                              style: const TextStyle(fontSize: 18),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() => quantity = ++quantity);
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              child: Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xffff4747),
+                        ),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    EdgeInsets.zero),
+                          ),
+                          onPressed: () {
+                            cart.addProduct(widget.data, quantity: quantity);
+                          },
+                          child: Text(
+                            'Add Item ₹${quantity * widget.data.price}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
         )
       ],
     );

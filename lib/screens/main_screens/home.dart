@@ -1,13 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lavanya_mess/models/product_model.dart';
+import 'package:lavanya_mess/services/api_services.dart';
+import 'package:lavanya_mess/widgets/filter_bottom_sheet.dart';
 import 'package:lavanya_mess/widgets/plan_card.dart';
 import 'package:lavanya_mess/widgets/product.dart';
 import 'package:lavanya_mess/widgets/search_input.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<ProductModel> products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    final response = await ApiService.request('/product/search', method: 'GET');
+    if (response['statusCode'] == 200) {
+      final List<dynamic> productsData = response['data']['products'];
+      setState(() {
+        products =
+            productsData.map((data) => ProductModel.fromJson(data)).toList();
+      });
+    } else {
+      debugPrint(response['data']['message']);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +116,7 @@ class Home extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -133,33 +160,53 @@ class Home extends StatelessWidget {
                     ],
                   )),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Recommended for you',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'All Dishes',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet<dynamic>(
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor:
+                              const Color.fromARGB(255, 252, 244, 244),
+                          builder: (context) => const FilterBottomSheet(),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.filter_alt_outlined,
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ]),
             ),
-            GridView.count(
+            GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              primary: false,
               padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: getAspectRatio(),
-              crossAxisCount: colCount > 0 ? colCount : 1,
-              children: const <Widget>[
-                Product(),
-                Product(),
-                Product(),
-                Product(),
-                Product(),
-                Product(),
-              ],
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: getAspectRatio(),
+                crossAxisCount: colCount > 0 ? colCount : 1,
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return Product(productData: products[index]);
+              },
             )
           ],
         ),
