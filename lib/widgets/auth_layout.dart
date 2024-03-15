@@ -51,22 +51,25 @@ class AuthLayout extends StatelessWidget {
                 child: Material(
                   elevation: 10,
                   borderRadius: const BorderRadius.all(Radius.circular(24)),
-                  child: Container(
-                    width: double.infinity,
-                    constraints: const BoxConstraints(
-                      maxWidth: 400,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: heading,
-                          ),
-                          ...children,
-                        ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Container(
+                      width: double.infinity,
+                      constraints: const BoxConstraints(
+                        maxWidth: 400,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: heading,
+                            ),
+                            ...children,
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});
@@ -30,6 +32,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider cart = Provider.of<CartProvider>(context);
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
@@ -39,20 +42,28 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       ),
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
+      items: <BottomNavigationBarItem>[
+        const BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart),
+          icon: Stack(children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child: Text(cart.getItemsCount().toString()),
+            ),
+            const Icon(Icons.shopping_cart)
+          ]),
           label: 'Cart',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.shopping_bag),
           label: 'Orders',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Me',
         ),

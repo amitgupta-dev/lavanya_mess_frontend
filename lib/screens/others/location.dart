@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:lavanya_mess/services/api_services.dart';
-import 'package:uuid/uuid.dart';
+import 'package:lavanya_mess/models/address.dart';
+import 'package:lavanya_mess/services/custom_location.dart';
+import 'package:lavanya_mess/widgets/set_location_bottom_sheet.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});
@@ -13,41 +13,25 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
-  GoogleMapController? mapController;
-  final TextEditingController _controller = TextEditingController();
   Timer? _debounceTimer;
-  var uuid = const Uuid();
-  String sessionToken = '123456';
   dynamic placesList = [];
-
+  GoogleMapController? mapController;
   late LatLng _center = const LatLng(23.34777, 85.33856);
+  final TextEditingController _controller = TextEditingController();
 
-  Future<LatLng> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    var location = await Geolocator.getCurrentPosition();
-
-    return LatLng(location.latitude, location.longitude);
-  }
+  AddressModel fullAddress = AddressModel(
+    isDefault: false,
+    receiver: ReceiverModel(
+      name: '',
+      phone: 0,
+    ),
+    address: '',
+    landmark: '',
+    location: LocationModel(
+      type: 'Point',
+      coordinates: [],
+    ),
+  );
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -55,46 +39,36 @@ class _LocationState extends State<Location> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _controller.addListener(() {
-      startDebounceTimer();
+      startDebounceTimer(context);
     });
+
+    CustomLocation.getLocationFromPlaceId(coordinates: _center)
+        .then((response) => {
+              if (response['statusCode'] == 200)
+                setState(() {
+                  fullAddress.address =
+                      response['location']['formatted_address'];
+                  fullAddress.location.coordinates = [
+                    _center.latitude,
+                    _center.longitude
+                  ];
+                })
+            });
     super.initState();
   }
 
-  void startDebounceTimer() {
+  void startDebounceTimer(BuildContext context) {
     // Cancel the existing debounce timer if it's active
     _debounceTimer?.cancel();
     // Start a new debounce timer
     _debounceTimer = Timer(const Duration(seconds: 1), () {
-      // Execute onChange function after debounce duration
-      onChange();
+      onChange(context);
     });
   }
 
-  void onChange() {
-    if (sessionToken == null) {
-      setState(() {
-        sessionToken = uuid.v4();
-      });
-    }
-    getSuggestions(_controller.text);
-  }
-
-  void getSuggestions(String input) async {
-    String PLACES_API_KEY = 'AIzaSyC_UCKe3KH8_OENIB05h3sP_D0_1lR-M8E';
-    String baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$PLACES_API_KEY&sessiontoken=$sessionToken';
-    debugPrint(request);
-
-    final Map<String, String> body = {
-      "url": request,
-    };
-    final response =
-        await ApiService.request('/proxyRequest', method: 'POST', body: body);
-    debugPrint(response['data']['predictions'].toString());
+  void onChange(BuildContext context) async {
+    dynamic response = await CustomLocation.getSuggestions(_controller.text);
     try {
       if (response['statusCode'] == 200) {
         setState(() {
@@ -111,17 +85,6 @@ class _LocationState extends State<Location> {
   @override
   Widget build(BuildContext context) {
     Timer? idleTimer;
-    void getAndSetCenter() async {
-      try {
-        LatLng position = await _determinePosition();
-        setState(() {
-          _center = position;
-        });
-        debugPrint(_center.toString());
-      } catch (e) {
-        debugPrint(e.toString());
-      }
-    }
 
     return Scaffold(
         appBar: AppBar(
@@ -155,13 +118,28 @@ class _LocationState extends State<Location> {
                       ),
                       onCameraMove: (cameraPosition) {
                         idleTimer?.cancel();
-                        idleTimer = Timer(const Duration(seconds: 2), () {
+                        idleTimer = Timer(const Duration(seconds: 2), () async {
                           // No interaction for 2 seconds, get location
                           setState(() {
                             _center = LatLng(cameraPosition.target.latitude,
                                 cameraPosition.target.longitude);
+                            fullAddress.location.coordinates = [
+                              cameraPosition.target.latitude,
+                              cameraPosition.target.longitude
+                            ];
                           });
-                          debugPrint(_center.toString());
+                          dynamic response =
+                              await CustomLocation.getLocationFromPlaceId(
+                                  coordinates: _center);
+                          if (response['statusCode'] == 200) {
+                            setState(() {
+                              fullAddress.address =
+                                  response['location']['formatted_address'];
+                              placesList = [];
+                              _controller.text = '';
+                            });
+                          }
+                          debugPrint('camera moved: $_center');
                         });
                       },
                     ),
@@ -170,56 +148,89 @@ class _LocationState extends State<Location> {
                       left: 0.0,
                       right: 0.0,
                       top: 0.0,
-                      bottom: 30.0,
+                      bottom: 53.0,
                       child: Center(
                         child: Image(
                           image: AssetImage(
-                            '/icons/marker.png',
+                            'assets/icons/marker.png',
                           ),
                           width: 60,
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 60,
-                      right: 0,
-                      left: 0,
-                      bottom: 0,
-                      child: ListView.builder(
-                        itemCount:
-                            placesList.length, // Number of items in the list
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: TextButton(
-                                onPressed: () {},
-                                style: TextButton.styleFrom(
+                    placesList.length != 0
+                        ? Positioned(
+                            top: 60,
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            child: ListView.builder(
+                              itemCount: placesList
+                                  .length, // Number of items in the list
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 20),
-                                  backgroundColor: Colors.white,
-                                  alignment: Alignment.centerLeft,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: index == 0
-                                          ? const BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10))
-                                          : index == placesList.length - 1
-                                              ? const BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(10),
-                                                  bottomRight:
-                                                      Radius.circular(10))
-                                              : const BorderRadius.all(
-                                                  Radius.zero)),
-                                ),
-                                child: Text(
-                                  placesList[index]['description'],
-                                  style: const TextStyle(color: Colors.black54),
-                                )),
-                          );
-                        },
-                      ),
-                    ),
+                                      horizontal: 15),
+                                  child: TextButton(
+                                      onPressed: () async {
+                                        LatLng newlatlang;
+                                        dynamic response = await CustomLocation
+                                            .getLocationFromPlaceId(
+                                                placeId: placesList[index]
+                                                    ['place_id']);
+                                        if (response['statusCode'] == 200) {
+                                          newlatlang = LatLng(
+                                              response['location']['coords']
+                                                  ['latitude'],
+                                              response['location']['coords']
+                                                  ['longitude']);
+                                          setState(() {
+                                            _center = newlatlang;
+                                            fullAddress.address =
+                                                response['location']
+                                                    ['formatted_address'];
+                                            placesList = [];
+                                          });
+                                        }
+
+                                        mapController?.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                            CameraPosition(
+                                                target: _center, zoom: 16.0),
+                                          ),
+                                        );
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 20),
+                                        backgroundColor: Colors.white,
+                                        alignment: Alignment.centerLeft,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: index == 0
+                                                ? const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10))
+                                                : index == placesList.length - 1
+                                                    ? const BorderRadius.only(
+                                                        bottomLeft:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10))
+                                                    : const BorderRadius.all(
+                                                        Radius.zero)),
+                                      ),
+                                      child: Text(
+                                        placesList[index]['description'],
+                                        style: const TextStyle(
+                                            color: Colors.black54),
+                                      )),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
                     Column(
                       children: [
                         Padding(
@@ -248,7 +259,7 @@ class _LocationState extends State<Location> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               border: InputBorder.none,
-                              hintText: 'Search any Dish',
+                              hintText: 'Search any Place',
                             ),
                           ),
                         ),
@@ -260,10 +271,21 @@ class _LocationState extends State<Location> {
                       child: FloatingActionButton(
                         backgroundColor: Colors.white,
                         onPressed: () async {
-                          LatLng newlatlang = await _determinePosition();
+                          LatLng newlatlang =
+                              await CustomLocation.currentLocation();
                           setState(() {
                             _center = newlatlang;
                           });
+                          dynamic response =
+                              await CustomLocation.getLocationFromPlaceId(
+                                  coordinates: _center);
+                          if (response['statusCode'] == 200) {
+                            setState(() {
+                              fullAddress.address =
+                                  response['location']['formatted_address'];
+                            });
+                          }
+
                           mapController?.animateCamera(
                             CameraUpdate.newCameraPosition(
                               CameraPosition(target: newlatlang, zoom: 16.0),
@@ -289,24 +311,45 @@ class _LocationState extends State<Location> {
                   direction: Axis.vertical,
                   spacing: 5,
                   children: [
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: Color(0xffff4747),
-                        ),
-                        Text(
-                          'Ranchi',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 20,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            color: Color(0xffff4747),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              fullAddress.address,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       width: double.maxFinite,
                       constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width - 20),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet<dynamic>(
+                            isScrollControlled: true,
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(10.0)),
+                            ),
+                            useSafeArea: true,
+                            builder: (context) =>
+                                SetLocationBottomSheet(address: fullAddress),
+                          );
+                        },
                         style: TextButton.styleFrom(
                           backgroundColor: const Color(0xffff4747),
                           padding: const EdgeInsets.all(15),

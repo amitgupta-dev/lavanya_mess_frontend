@@ -46,6 +46,14 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  int getItemsCount() {
+    int itemsCount = 0;
+    for (var item in _cartItems) {
+      itemsCount += item.quantity;
+    }
+    return itemsCount;
+  }
+
   double getTotalPrice() {
     double totalPrice = 0.0;
     for (var item in _cartItems) {
@@ -57,6 +65,11 @@ class CartProvider extends ChangeNotifier {
   double getDiscount() {
     double discountPercentage = 0.10;
     return getTotalPrice() * discountPercentage;
+  }
+
+  void emptyCart() {
+    _cartItems = [];
+    notifyListeners();
   }
 }
 

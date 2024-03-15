@@ -65,7 +65,7 @@ class _OnboardingState extends State<Onboarding> {
                         String? token = prefs.getString('token');
 
                         if (token != null) {
-                          int? statusCode = await auth.fetchMyData(token);
+                          int? statusCode = await auth.fetchMyData();
                           if (statusCode == 200 && context.mounted) {
                             Navigator.pushReplacement(
                               context,

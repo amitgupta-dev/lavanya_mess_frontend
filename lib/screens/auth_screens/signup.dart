@@ -18,10 +18,10 @@ class Signup extends StatelessWidget {
         ),
       ),
       children: [
-        const CustomInputWidget(text: "Name"),
-        const CustomInputWidget(text: "Email"),
-        const CustomInputWidget(text: "Phone"),
-        const CustomInputWidget(text: "Password"),
+        const CustomInputWidget(labelText: "Name"),
+        const CustomInputWidget(labelText: "Email"),
+        const CustomInputWidget(labelText: "Phone"),
+        const CustomInputWidget(labelText: "Password"),
         CustomButton(
           text: "Signup",
           onPressed: () {},

@@ -3,12 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://localhost:5000/api';
+  static const String _baseUrl = 'http://192.168.91.231:5000/api';
 
   static Future<Map<String, dynamic>> request(String endpoint,
-      {String method = 'GET',
-      Map<String, dynamic>? body,
-      String? token}) async {
+      {String method = 'GET', dynamic body, String? token}) async {
     final url = '$_baseUrl$endpoint';
     late http.Response response;
 
@@ -31,7 +29,15 @@ class ApiService {
         });
         break;
       case 'PUT':
-        response = await http.put(Uri.parse(url), body: body, headers: {
+        response =
+            await http.put(Uri.parse(url), body: jsonEncode(body), headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        });
+        break;
+      case 'PATCH':
+        response =
+            await http.patch(Uri.parse(url), body: jsonEncode(body), headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         });

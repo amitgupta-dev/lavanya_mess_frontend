@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/screens/main_screens/cart.dart';
-import 'package:lavanya_mess/screens/main_screens/home.dart';
-import 'package:lavanya_mess/screens/main_screens/orders.dart';
-import 'package:lavanya_mess/screens/main_screens/profile.dart';
+import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:lavanya_mess/providers/navigaton_provider.dart';
 import 'package:lavanya_mess/widgets/my_drawer.dart';
+import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -13,42 +12,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 0;
-  Widget screenWidget = const Home();
-  String pageName = 'Home';
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        setState(() {
-          screenWidget = const Home();
-          pageName = 'Home';
-        });
-      case 1:
-        setState(() {
-          screenWidget = const Cart();
-          pageName = 'My Cart';
-        });
-      case 2:
-        setState(() {
-          screenWidget = const Orders();
-          pageName = 'My Orders';
-        });
-      default:
-        setState(() {
-          screenWidget = const Profile();
-          pageName = 'Profile';
-        });
-        break;
-    }
-
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    CartProvider cart = Provider.of<CartProvider>(context);
+    NavigationProvider bottomNav = Provider.of<NavigationProvider>(context);
+
+    int cartCount = cart.getItemsCount();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFff4747),
@@ -69,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
         title: Row(
           children: [
             Text(
-              pageName,
+              bottomNav.pageName,
               style: const TextStyle(
                   color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -84,28 +53,43 @@ class _DashboardState extends State<Dashboard> {
         selectedIconTheme: const IconThemeData(
           size: 30,
         ),
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        currentIndex: bottomNav.bottomNavIndex,
+        onTap: (index) => bottomNav.onIndexChanged(index),
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
+            icon: Stack(children: [
+              const Center(child: Icon(Icons.shopping_cart)),
+              if (cartCount > 0)
+                Transform.translate(
+                  offset: const Offset(10, -5),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.red),
+                    child: Center(
+                        child: Text(
+                      cartCount.toString(),
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    )),
+                  ),
+                ),
+            ]),
             label: 'Cart',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
             label: 'Orders',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Me',
           ),
         ],
       ),
-      body: screenWidget,
+      body: bottomNav.screenWidget,
     );
   }
 }

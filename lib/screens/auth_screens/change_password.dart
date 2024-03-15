@@ -17,8 +17,8 @@ class ChangePassword extends StatelessWidget {
         ),
       ),
       children: [
-        const CustomInputWidget(text: "New Password"),
-        const CustomInputWidget(text: "Confirm New Password"),
+        const CustomInputWidget(labelText: "New Password"),
+        const CustomInputWidget(labelText: "Confirm New Password"),
         CustomButton(
           text: "Change Password",
           onPressed: () {

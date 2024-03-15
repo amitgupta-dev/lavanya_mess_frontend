@@ -7,6 +7,7 @@ import 'package:lavanya_mess/screens/auth_screens/splash_screen.dart';
 import 'package:lavanya_mess/screens/auth_screens/onboarding.dart';
 import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
 import 'package:lavanya_mess/screens/others/location.dart';
+import 'package:lavanya_mess/screens/others/plans.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/changePassword': (context) => const ChangePassword(),
         '/dashboard': (context) => const Dashboard(),
         '/location': (context) => const Location(),
+        '/plans': (context) => const Plans(),
       },
     );
   }

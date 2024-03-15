@@ -205,6 +205,7 @@ class _HomeState extends State<Home> {
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {
+                debugPrint(products[index].toString());
                 return Product(productData: products[index]);
               },
             )

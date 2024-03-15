@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/product_model.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:lavanya_mess/providers/navigaton_provider.dart';
 import 'package:lavanya_mess/widgets/product_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ class Product extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CartProvider cart = Provider.of<CartProvider>(context);
+    NavigationProvider bottomNav = Provider.of<NavigationProvider>(context);
     return GestureDetector(
       onTap: () {
         showModalBottomSheet<dynamic>(
@@ -137,7 +139,9 @@ class Product extends StatelessWidget {
                                                   EdgeInsetsGeometry>(
                                               EdgeInsets.zero),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          bottomNav.onIndexChanged(1);
+                                        },
                                         child: const Row(
                                           children: [
                                             Icon(

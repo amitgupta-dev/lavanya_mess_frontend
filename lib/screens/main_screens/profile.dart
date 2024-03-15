@@ -1,13 +1,48 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lavanya_mess/providers/auth_provider.dart';
+import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  Map<String, dynamic> updates = {
+    "name": "",
+    "email": "",
+    "phone": null,
+    "dob": null,
+    "gender": "",
+  };
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
+
+      setState(() {
+        updates['name'] = auth.authData["name"];
+        updates['email'] = auth.authData["email"];
+        updates['phone'] = auth.authData["phone"];
+        updates['dob'] = auth.authData["dob"];
+        updates['gender'] = auth.authData["gender"];
+      });
+      debugPrint(updates.toString());
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    TextEditingController datePickerController = TextEditingController();
+    debugPrint(updates.toString());
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -31,7 +66,8 @@ class Profile extends StatelessWidget {
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       border: Border.all(
-                          width: 5, color: Color.fromARGB(255, 255, 246, 246)),
+                          width: 5,
+                          color: const Color.fromARGB(255, 255, 246, 246)),
                       image: const DecorationImage(
                         image: AssetImage('assets/images/profile.jpg'),
                       ),
@@ -45,27 +81,76 @@ class Profile extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Container(
                     decoration: const BoxDecoration(color: Colors.transparent),
-                    child: const Column(
+                    child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: CustomInputWidget(text: 'Name'),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomInputWidget(
+                            labelText: 'Name',
+                            value: updates['name'],
+                          ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: CustomInputWidget(text: 'Email'),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomInputWidget(
+                            labelText: 'Email',
+                            value: updates['email'],
+                          ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: CustomInputWidget(text: 'Mobile'),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomInputWidget(
+                            labelText: 'Phone',
+                            value: updates['phone'].toString(),
+                          ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: CustomInputWidget(text: 'DOB'),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: InkWell(
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                lastDate: DateTime.now(),
+                                firstDate: DateTime(1950),
+                                initialDate: DateTime.now(),
+                              );
+                              if (pickedDate == null) return;
+                              datePickerController.text =
+                                  DateFormat('dd/mm/yyyy').format(pickedDate);
+                              setState(() {
+                                updates['dob'] =
+                                    (pickedDate.millisecondsSinceEpoch / 1000)
+                                        .round();
+                              });
+                            },
+                            child: AbsorbPointer(
+                              child: CustomInputWidget(
+                                labelText: 'DOB',
+                                readOnly: true,
+                                inputType: TextInputType.datetime,
+                                value: updates['dob'] != null
+                                    ? DateFormat('dd/MM/yyyy').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            updates['dob'] * 1000))
+                                    : "",
+                              ),
+                            ),
+                          ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: CustomInputWidget(text: 'Gender'),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomInputWidget(
+                            labelText: 'Gender',
+                            value: updates['gender'],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomButton(
+                              text: 'Update',
+                              onPressed: () {
+                                debugPrint(updates.toString());
+                              }),
                         ),
                       ],
                     ),

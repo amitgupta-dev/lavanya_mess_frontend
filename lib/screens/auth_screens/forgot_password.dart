@@ -23,7 +23,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
       children: [
-        const CustomInputWidget(text: "Email"),
+        const CustomInputWidget(labelText: "Email"),
         CustomButton(
           text: "Send OTP",
           onPressed: () {
@@ -33,7 +33,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           },
         ),
         if (otpSent) ...[
-          const CustomInputWidget(text: "OTP"),
+          const CustomInputWidget(labelText: "OTP"),
           CustomButton(
             text: "Vertify",
             onPressed: () {

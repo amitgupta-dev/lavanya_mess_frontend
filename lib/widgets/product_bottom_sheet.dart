@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/product_model.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:lavanya_mess/providers/navigaton_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProductBottomSheet extends StatefulWidget {
@@ -13,9 +14,11 @@ class ProductBottomSheet extends StatefulWidget {
 
 class _ProductBottomSheetState extends State<ProductBottomSheet> {
   int quantity = 1;
+
   @override
   Widget build(BuildContext context) {
-    final CartProvider cart = Provider.of<CartProvider>(context);
+    CartProvider cart = Provider.of<CartProvider>(context);
+    NavigationProvider bottomNav = Provider.of<NavigationProvider>(context);
     return Wrap(
       children: [
         Expanded(
@@ -189,7 +192,12 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           EdgeInsets.zero),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Future.delayed(const Duration(microseconds: 1000), () {
+                        bottomNav.onIndexChanged(1);
+                      });
+                    },
                     child: const Text(
                       'Go to Cart',
                       style: TextStyle(

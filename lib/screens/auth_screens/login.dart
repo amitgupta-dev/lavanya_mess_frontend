@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
       ),
       children: [
         CustomInputWidget(
-          text: "Email",
+          labelText: "Email",
           onChanged: (value) {
             setState(() {
               _email = value;
@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
           },
         ),
         CustomInputWidget(
-          text: "Password",
+          labelText: "Password",
           onChanged: (value) {
             setState(() {
               _password = value;

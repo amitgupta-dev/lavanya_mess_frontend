@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         if (token != null) {
           debugPrint(token);
-          _auth?.fetchMyData(token).then((statusCode) {
+          _auth?.fetchMyData().then((statusCode) {
             debugPrint(statusCode.toString());
             if (statusCode == 200) {
               debugPrint(statusCode.toString());

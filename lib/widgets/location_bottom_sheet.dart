@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -71,7 +70,12 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                   ),
                   const Divider(),
                   InkWell(
-                    onTap: () => Navigator.pushNamed(context, '/location'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(microseconds: 1000), () {
+                        Navigator.pushNamed(context, '/location');
+                      });
+                    },
                     child: const Row(
                       children: [
                         Icon(
@@ -113,7 +117,6 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                 if (auth.authData != null) {
                   return Container(
                       width: double.infinity,
-                      height: auth.authData['locations'].length * 44,
                       padding: const EdgeInsets.all(8),
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
@@ -121,6 +124,7 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ListView.builder(
+                        shrinkWrap: true,
                         itemCount: auth.authData['locations'].length,
                         itemBuilder: (context, index) => ListTile(
                           visualDensity: const VisualDensity(vertical: -4),

@@ -8,8 +8,8 @@ class AuthProvider extends ChangeNotifier {
 
   dynamic get authData => _userData;
 
-  Future<int?> fetchMyData(String token) async {
-    final response = await ApiService.request('/user', token: token);
+  Future<int?> fetchMyData({String? token}) async {
+    final response = await ApiService.request('/user');
     if (response['statusCode'] == 200) {
       _userData = response['data']['user'];
       debugPrint(response['data']['user'].toString());
