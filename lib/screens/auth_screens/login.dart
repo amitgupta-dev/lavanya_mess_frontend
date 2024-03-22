@@ -46,34 +46,37 @@ class _LoginState extends State<Login> {
             });
           },
         ),
-        CustomButton(
-          text: "Login",
-          onPressed: () {
-            if (_email.isNotEmpty && _password.isNotEmpty) {
-              final Map<String, String> body = {
-                "email": _email,
-                "password": _password
-              };
-              auth.login(context, body);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
-                      'Please fill both the email and password fields'),
-                  backgroundColor: Colors.teal,
-                  behavior: SnackBarBehavior.floating,
-                  action: SnackBarAction(
-                    label: 'Dismiss',
-                    disabledTextColor: Colors.white,
-                    textColor: Colors.yellow,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: CustomButton(
+            text: "Login",
+            onPressed: () {
+              if (_email.isNotEmpty && _password.isNotEmpty) {
+                final Map<String, String> body = {
+                  "email": _email,
+                  "password": _password
+                };
+                auth.signupLogin(context, body, 'login');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text(
+                        'Please fill both the email and password fields'),
+                    backgroundColor: Colors.teal,
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: 'Dismiss',
+                      disabledTextColor: Colors.white,
+                      textColor: Colors.yellow,
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      },
+                    ),
                   ),
-                ),
-              );
-            }
-          },
+                );
+              }
+            },
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 10),

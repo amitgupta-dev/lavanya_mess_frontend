@@ -2,6 +2,7 @@ class MessPlanModel {
   final String id;
   final String name;
   final String? thumbnail;
+  final String banner;
   final double price;
   final int timesADay;
   final List<String> meals;
@@ -14,6 +15,7 @@ class MessPlanModel {
     required this.id,
     required this.name,
     this.thumbnail,
+    required this.banner,
     required this.price,
     required this.timesADay,
     required this.meals,
@@ -28,6 +30,7 @@ class MessPlanModel {
       id: json['_id'],
       name: json['name'],
       thumbnail: json['thumbnail'],
+      banner: json['banner'],
       price: json['price'].toDouble(),
       timesADay: json['timesADay'],
       meals: List<String>.from(json['meals']),
@@ -43,6 +46,7 @@ class MessPlanModel {
       '_id': id,
       'name': name,
       'thumbnail': thumbnail,
+      'banner': banner,
       'price': price,
       'timesADay': timesADay,
       'meals': meals,

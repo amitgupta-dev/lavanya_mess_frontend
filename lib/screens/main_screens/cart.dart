@@ -1,21 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
+import 'package:lavanya_mess/services/api_services.dart';
 import 'package:lavanya_mess/widgets/cart_item.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/upi_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:upi_india/upi_response.dart';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthProvider auth = Provider.of<AuthProvider>(context);
     final CartProvider cart = Provider.of<CartProvider>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenwidth = MediaQuery.of(context).size.width;
     final double size =
         (screenHeight < screenwidth ? screenHeight : screenwidth) / 2;
+
+    void createOrder(UpiResponse txnRes) async {
+      Map<String, dynamic> paymentBody = {
+        'amount': cart.getTotalPrice(),
+        'method': 'upi',
+        'status': txnRes.status == 'failure' ? 'failed' : 'completed',
+        'txnId': txnRes.transactionId ?? '',
+        'txnRef': txnRes.transactionRefId ?? '',
+        'approvalRef': txnRes.approvalRefNo ?? '',
+      };
+      dynamic createdPayment = await ApiService.request('/payment',
+          method: 'POST', body: paymentBody);
+
+      List<dynamic> locations = auth.authData['locations'];
+      Map<String, dynamic> orderBody = {
+        'products': cart.cartItems.map((item) => item.toJson()).toList(),
+        'totalPrice': cart.getTotalPrice(),
+        'payment': createdPayment['data']['paymentDetails']['_id'],
+        'status': txnRes.status == 'failure' ? 'payment failed' : 'pending',
+        'destination':
+            locations.firstWhere((element) => element['isDefault'] == true)
+      };
+      await ApiService.request('/order', method: 'POST', body: orderBody);
+
+      if (txnRes.status == 'success') cart.emptyCart();
+    }
+
     return SafeArea(
       child: cart.cartItems.isEmpty
           ? Center(
@@ -31,7 +62,7 @@ class Cart extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: const Image(
                       image: AssetImage(
-                        '/assets/images/empty_cart.jpg',
+                        'assets/images/empty_cart.jpg',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -128,7 +159,14 @@ class Cart extends StatelessWidget {
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: (context) => const UpiBottomSheet());
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              builder: (context) => UpiBottomSheet(
+                                    savePayment: createOrder,
+                                    paymentDetails: {
+                                      'amount': cart.getTotalPrice()
+                                    },
+                                  ));
                         },
                       ),
                     ),

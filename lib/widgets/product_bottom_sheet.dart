@@ -21,158 +21,155 @@ class _ProductBottomSheetState extends State<ProductBottomSheet> {
     NavigationProvider bottomNav = Provider.of<NavigationProvider>(context);
     return Wrap(
       children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
+        Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    clipBehavior: Clip.antiAlias,
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 255, 233, 233),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: const Color(0xffffffff),
-                      ),
-                      child: Column(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 3 / 2,
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Image.network(
-                                widget.data.thumbnail,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        widget.data.name,
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(children: [
-                                        SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Icon(
-                                            Icons.favorite_border_outlined,
-                                            color: Colors.black54,
-                                            size: 24,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Icon(
-                                            Icons.reply_outlined,
-                                            color: Colors.black54,
-                                            size: 24,
-                                          ),
-                                        ),
-                                      ]),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                height: 20,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.amber.shade100),
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.amber[50],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star_outlined,
-                                      size: 14,
-                                      color: Colors.amber.shade500,
-                                    ),
-                                    Icon(
-                                      Icons.star_outlined,
-                                      size: 14,
-                                      color: Colors.amber.shade500,
-                                    ),
-                                    Icon(
-                                      Icons.star_outlined,
-                                      size: 14,
-                                      color: Colors.amber.shade500,
-                                    ),
-                                    const Icon(
-                                      Icons.star_border_outlined,
-                                      size: 14,
-                                      color: Colors.black26,
-                                    ),
-                                    const Icon(
-                                      Icons.star_border_outlined,
-                                      size: 14,
-                                      color: Colors.black26,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.data.description,
-                              style: const TextStyle(
-                                  color: Color.fromARGB(166, 0, 0, 0)),
-                            ),
-                          ),
-                        ],
-                      ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 255, 233, 233),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
                   ),
-                ],
-              ),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: const Color(0xffffffff),
+                    ),
+                    child: Column(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 3 / 2,
+                          child: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Image.network(
+                              widget.data.thumbnail,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      widget.data.name,
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(children: [
+                                      SizedBox(
+                                        width: 35,
+                                        height: 35,
+                                        child: Icon(
+                                          Icons.favorite_border_outlined,
+                                          color: Colors.black54,
+                                          size: 24,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 35,
+                                        height: 35,
+                                        child: Icon(
+                                          Icons.reply_outlined,
+                                          color: Colors.black54,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ]),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              height: 20,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.amber.shade100),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.amber[50],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.star_outlined,
+                                    size: 14,
+                                    color: Colors.amber.shade500,
+                                  ),
+                                  Icon(
+                                    Icons.star_outlined,
+                                    size: 14,
+                                    color: Colors.amber.shade500,
+                                  ),
+                                  Icon(
+                                    Icons.star_outlined,
+                                    size: 14,
+                                    color: Colors.amber.shade500,
+                                  ),
+                                  const Icon(
+                                    Icons.star_border_outlined,
+                                    size: 14,
+                                    color: Colors.black26,
+                                  ),
+                                  const Icon(
+                                    Icons.star_border_outlined,
+                                    size: 14,
+                                    color: Colors.black26,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Text(
+                            widget.data.description,
+                            style: const TextStyle(
+                                color: Color.fromARGB(166, 0, 0, 0)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

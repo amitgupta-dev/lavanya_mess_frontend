@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lavanya_mess/models/mess_plan.dart';
 import 'package:lavanya_mess/services/api_services.dart';
 
@@ -12,7 +13,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  dynamic menu;
+  Map<String, dynamic> menu = {};
+  Map<String, dynamic> meals = {};
+  String selectedDay = 'Monday';
 
   @override
   void initState() {
@@ -23,10 +26,17 @@ class _MenuState extends State<Menu> {
             Map<String, dynamic>.from(response['data']['menu']);
         menuData.removeWhere((key, value) =>
             key.startsWith("_") || key == "createdAt" || key == "updatedAt");
+        debugPrint('hello ${menuData.toString()}');
         setState(() {
           menu = menuData;
+          debugPrint('hello ${menu.toString()}');
+          meals = Map.fromEntries(
+            menu[selectedDay].entries.where(
+                  (entry) =>
+                      ["breakfast", "lunch", "dinner"].contains(entry.key),
+                ),
+          );
         });
-        debugPrint(menu.toString());
       }
     });
     super.initState();
@@ -34,135 +44,212 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final colCount = ((screenWidth - 15) / 340).floor();
+    // debugPrint(menu.toString());
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.white, // Set desired color
-          ),
-          backgroundColor: const Color(0xffff4747),
-          title: Text(
-            widget.plan.name.toUpperCase(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: PopupMenuButton(
+          icon: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(width: 2, color: Colors.white)),
+            child: Text(
+              selectedDay.substring(0, 3),
+              style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
+          itemBuilder: (BuildContext context) {
+            return <String>[
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ]
+                .map(
+                  (element) => PopupMenuItem<String>(
+                    value: element,
+                    onTap: () => menu.isNotEmpty
+                        ? setState(() {
+                            selectedDay = element;
+                            meals = Map.fromEntries(
+                              menu[selectedDay].entries.where(
+                                    (entry) => ["breakfast", "lunch", "dinner"]
+                                        .contains(entry.key),
+                                  ),
+                            );
+                          })
+                        : () {},
+                    child: Text(element),
+                  ),
+                )
+                .toList();
+          },
+          onSelected: (value) {
+            setState(() {
+              selectedDay = value.toString();
+            });
+          },
         ),
-        body: SizedBox(
-          width: double.infinity,
-          child: Center(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: menu != null
-                  ? GridView.builder(
-                      itemCount: menu.length,
-                      padding: const EdgeInsets.all(10),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 2,
-                        crossAxisCount: colCount == 0 ? 1 : colCount,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        final day = menu.keys.elementAt(index);
-                        final meals = menu[day];
-                        return Card(
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  day,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5),
-                                IntrinsicWidth(
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "Breakfast: ",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        "${meals['breakfast']}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IntrinsicWidth(
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "Lunch: ",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        "${meals['lunch']}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IntrinsicWidth(
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "Dinner: ",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        "${meals['dinner']}",
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : const CircularProgressIndicator(),
-            ),
-          ),
-        ));
-  }
-}
-
-class Tile extends StatelessWidget {
-  const Tile({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(10),
       ),
-      child: const Text('Hello'),
+      body: menu.isNotEmpty
+          ? Stack(
+              children: [
+                Column(
+                  children: [
+                    ...meals.entries.map((entry) {
+                      return Expanded(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: entry.key == 'breakfast'
+                                ? const Color(0xffdc5c05).withOpacity(0.8)
+                                : entry.key == 'lunch'
+                                    ? const Color(0xffe3a945).withOpacity(0.8)
+                                    : const Color(0xff32a560).withOpacity(0.8),
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+                Column(
+                  children: [
+                    ...meals.entries.map((entry) {
+                      return Expanded(
+                        flex: 1,
+                        child: Container(
+                          decoration:
+                              const BoxDecoration(color: Colors.transparent),
+                          child: Row(
+                            children: [
+                              if (entry.key == 'breakfast' ||
+                                  entry.key == 'dinner')
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            entry.key.toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.leckerliOne(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.7),
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            entry.value['name'],
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.leckerliOne(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.7),
+                                                fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Transform.scale(
+                                    scale: 2,
+                                    child: Container(
+                                      width: screenWidth / 3,
+                                      height: screenWidth / 3,
+                                      constraints: BoxConstraints(
+                                          maxHeight: screenHeight / 4.8,
+                                          maxWidth: screenHeight / 4.8),
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                        color: entry.key == 'breakfast'
+                                            ? const Color(0xffdc5c05)
+                                            : entry.key == 'lunch'
+                                                ? const Color(0xffe3a945)
+                                                : const Color(0xff32a560),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Container(
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: const BoxDecoration(
+                                              shape: BoxShape.circle),
+                                          child: Image.network(
+                                            entry.value['thumbnail'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (entry.key == 'lunch')
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 20),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            entry.key.toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.leckerliOne(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.7),
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            entry.value['name'],
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.leckerliOne(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black
+                                                    .withOpacity(0.7),
+                                                fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ],
+            )
+          : Container(),
     );
   }
 }
