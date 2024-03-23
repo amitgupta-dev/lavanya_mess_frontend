@@ -5,6 +5,7 @@ import 'package:lavanya_mess/providers/cart_provider.dart';
 import 'package:lavanya_mess/providers/filter_provider.dart';
 import 'package:lavanya_mess/providers/list_data_provider.dart';
 import 'package:lavanya_mess/providers/navigaton_provider.dart';
+import 'package:lavanya_mess/providers/util_states_provider.dart';
 import 'package:lavanya_mess/screens/my_app.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ void main() {
           ChangeNotifierProvider(create: (context) => NavigationProvider()),
           ChangeNotifierProvider(create: (context) => FilterProvider()),
           ChangeNotifierProvider(create: (context) => ListDataProvider()),
+          ChangeNotifierProvider(create: (context) => UtilStateProvider()),
         ],
         child: const MyApp(),
       ),

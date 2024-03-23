@@ -93,9 +93,10 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
                     .then((UpiResponse response) {
                   widget.savePayment(response);
                   Navigator.popUntil(context, (route) => route.isFirst);
-                  navigate.onIndexChanged(0);
+                  navigate.onIndexChanged(1);
                 }).catchError((error) {
-                  debugPrint(error.toString());
+                  debugPrint('error id' + error.toString());
+                  widget.savePayment();
                   _upiErrorHandler(error);
                 });
               },

@@ -14,7 +14,6 @@ class NavigationProvider extends ChangeNotifier {
   String get pageName => _pageName;
 
   void onIndexChanged(int index) {
-    debugPrint(index.toString());
     switch (index) {
       case 0:
         _screenWidget = const Home();

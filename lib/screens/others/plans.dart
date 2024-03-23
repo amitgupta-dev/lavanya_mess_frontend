@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/mess_plan.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
+import 'package:lavanya_mess/providers/util_states_provider.dart';
 import 'package:lavanya_mess/screens/others/menu.dart';
 import 'package:lavanya_mess/services/api_services.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
@@ -35,22 +36,24 @@ class _PlansState extends State<Plans> {
   @override
   Widget build(BuildContext context) {
     final AuthProvider auth = Provider.of<AuthProvider>(context);
+    final UtilStateProvider utilStates =
+        Provider.of<UtilStateProvider>(context);
 
-    void createSubscription(UpiResponse txnRes) async {
-      debugPrint('done');
+    void createSubscription({UpiResponse? txnRes}) async {
+      utilStates.setIsLoading(true);
       Map<String, dynamic> paymentBody = {
         'amount': plans.firstWhere((plan) => plan.id == selectedPlanId).price,
         'method': 'upi',
-        'status': txnRes.status == 'failure' ? 'failed' : 'completed',
-        'txnId': txnRes.transactionId ?? '',
-        'txnRef': txnRes.transactionRefId ?? '',
-        'approvalRef': txnRes.approvalRefNo ?? '',
+        'status': txnRes?.status == 'success' ? 'completed' : 'failed',
+        'txnId': txnRes?.transactionId ?? '',
+        'txnRef': txnRes?.transactionRefId ?? '',
+        'approvalRef': txnRes?.approvalRefNo ?? '',
       };
       dynamic createdPayment = await ApiService.request('/payment',
           method: 'POST', body: paymentBody);
 
       List<dynamic> locations = auth.authData['locations'];
-      if (txnRes.status == 'success') {
+      if (txnRes?.status == 'success') {
         Map<String, dynamic> subscriptionBody = {
           'plan': selectedPlanId,
           'startDate': DateTime.now(),
@@ -63,7 +66,11 @@ class _PlansState extends State<Plans> {
         await ApiService.request('/subscription',
             method: 'POST', body: subscriptionBody);
       }
+      utilStates.setIsLoading(false);
     }
+
+    bool hasDefaultLocation =
+        auth.authData['locations'].any((item) => item['isDefault'] == true);
 
     return Scaffold(
       appBar: AppBar(
@@ -109,23 +116,28 @@ class _PlansState extends State<Plans> {
           ),
           selectedPlanId.isNotEmpty
               ? CustomButton(
-                  text:
-                      'Buy Plan ₹${plans.firstWhere((plan) => plan.id == selectedPlanId).price}',
+                  text: hasDefaultLocation
+                      ? 'Buy Plan ₹${plans.firstWhere((plan) => plan.id == selectedPlanId).price}'
+                      : 'Set Location',
                   height: 60,
                   onPressed: () {
-                    showModalBottomSheet(
+                    if (hasDefaultLocation) {
+                      showModalBottomSheet(
                         context: context,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         builder: (context) => UpiBottomSheet(
-                              savePayment: createSubscription,
-                              paymentDetails: {
-                                'amount': plans
-                                    .firstWhere(
-                                        (plan) => plan.id == selectedPlanId)
-                                    .price
-                              },
-                            ));
+                          savePayment: createSubscription,
+                          paymentDetails: {
+                            'amount': plans
+                                .firstWhere((plan) => plan.id == selectedPlanId)
+                                .price
+                          },
+                        ),
+                      );
+                    } else {
+                      Navigator.pushNamed(context, '/location');
+                    }
                   },
                 )
               : Container(),

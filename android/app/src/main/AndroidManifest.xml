@@ -10,7 +10,8 @@
         android:label="Lavanya Mess"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyC_UCKe3KH8_OENIB05h3sP_D0_1lR-M8E"/>
         <uses-library android:name="com.google.android.maps" />
         <activity
             android:name=".MainActivity"

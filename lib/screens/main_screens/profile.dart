@@ -27,30 +27,31 @@ class Child extends StatefulWidget {
 
 class _ChildState extends State<Child> {
   Map<String, dynamic> updates = {
+    "avatar": "",
     "name": "",
     "email": "",
     "phone": null,
-    "dob": null,
+    "dob": DateTime.now(),
     "gender": "",
   };
 
   @override
   void initState() {
     super.initState();
+    updates['avatar'] = widget.data["avatar"];
     updates['name'] = widget.data["name"];
     updates['email'] = widget.data["email"];
     updates['phone'] = widget.data["phone"];
-    updates['dob'] = DateTime.parse(widget.data["dob"]);
+    if (widget.data.containsKey("dob") && widget.data["dob"] != null) {
+      updates['dob'] = DateTime.parse(widget.data["dob"]);
+    }
     updates['gender'] = widget.data["gender"];
-
-    debugPrint('hello${updates.toString()}');
   }
 
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
     TextEditingController dateInputController = TextEditingController();
-    debugPrint(updates.toString());
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -76,8 +77,8 @@ class _ChildState extends State<Child> {
                       border: Border.all(
                           width: 5,
                           color: const Color.fromARGB(255, 255, 246, 246)),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/profile.jpg'),
+                      image: DecorationImage(
+                        image: NetworkImage(updates['avatar']),
                       ),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(80),

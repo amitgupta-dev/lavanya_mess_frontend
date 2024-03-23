@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://192.168.91.231:5000/api';
+  static const String _baseUrl = 'https://lavanya-mess.vercel.app/api';
 
   static Future<Map<String, dynamic>> request(String endpoint,
       {String method = 'GET', dynamic body, String? token}) async {
