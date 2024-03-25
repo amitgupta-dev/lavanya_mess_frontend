@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     super.initState();
     updates['avatar'] = widget.data["avatar"];
     updates['name'] = widget.data["name"];
@@ -36,6 +37,8 @@ class _ProfileState extends State<Profile> {
     }
     updates['gender'] = widget.data["gender"];
 =======
+=======
+>>>>>>> parent of 7425639 (multiple updates)
 =======
 >>>>>>> parent of 7425639 (multiple updates)
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -53,6 +56,9 @@ class _ProfileState extends State<Profile> {
 
     super.initState();
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 7425639 (multiple updates)
+=======
 >>>>>>> parent of 7425639 (multiple updates)
 =======
 >>>>>>> parent of 7425639 (multiple updates)
@@ -62,9 +68,12 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     AuthProvider auth = Provider.of<AuthProvider>(context);
     TextEditingController dateInputController = TextEditingController();
 =======
+=======
+>>>>>>> parent of 7425639 (multiple updates)
 =======
 >>>>>>> parent of 7425639 (multiple updates)
     TextEditingController datePickerController = TextEditingController();

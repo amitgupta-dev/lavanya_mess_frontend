@@ -110,66 +110,6 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  @override
-  Widget build(BuildContext context) {
-    NavigationProvider navigate = Provider.of<NavigationProvider>(context);
-    if (apps == null) {
-      return const SizedBox(
-          width: double.infinity,
-          child: Center(child: CircularProgressIndicator()));
-    } else if (apps!.isEmpty) {
-      return SizedBox(
-        width: double.infinity,
-        child: Center(
-          child: Text(
-            'No apps found to handle transaction.',
-            style: header,
-          ),
-        ),
-      );
-    } else {
-      return SizedBox(
-        width: double.infinity,
-        child: Wrap(
-          children: apps!.map<Widget>((UpiApp app) {
-            return GestureDetector(
-              onTap: () {
-                initiateTransaction(app, widget.paymentDetails['amount'])
-                    .then((UpiResponse response) {
-                  widget.savePayment(response);
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                  navigate.onIndexChanged(1);
-                }).catchError((error) {
-                  debugPrint('error id' + error.toString());
-                  widget.savePayment();
-                  _upiErrorHandler(error);
-                });
-              },
-              child: SizedBox(
-                height: 100,
-                width: 100,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.memory(
-                      app.icon,
-                      height: 60,
-                      width: 60,
-                    ),
-                    Text(app.name),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-=======
-=======
->>>>>>> parent of 7425639 (multiple updates)
   void _checkTxnStatus(String status) {
     switch (status) {
       case UpiPaymentStatus.SUBMITTED:
@@ -183,10 +123,6 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
         break;
       default:
         debugPrint('Received an Unknown transaction status');
-<<<<<<< HEAD
->>>>>>> parent of 7425639 (multiple updates)
-=======
->>>>>>> parent of 7425639 (multiple updates)
     }
   }
 

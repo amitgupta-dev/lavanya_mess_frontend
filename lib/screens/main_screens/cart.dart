@@ -17,42 +17,6 @@ class Cart extends StatelessWidget {
     final screenwidth = MediaQuery.of(context).size.width;
     final double size =
         (screenHeight < screenwidth ? screenHeight : screenwidth) / 2;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    void createOrder({UpiResponse? txnRes}) async {
-      Map<String, dynamic> paymentBody = {
-        'amount': cart.getTotalPrice(),
-        'method': 'upi',
-        'status': txnRes?.status == 'failure' ? 'failed' : 'completed',
-        'txnId': txnRes?.transactionId ?? '',
-        'txnRef': txnRes?.transactionRefId ?? '',
-        'approvalRef': txnRes?.approvalRefNo ?? '',
-      };
-      dynamic createdPayment = await ApiService.request('/payment',
-          method: 'POST', body: paymentBody);
-
-      List<dynamic> locations = auth.authData['locations'];
-      Map<String, dynamic> orderBody = {
-        'products': cart.cartItems.map((item) => item.toJson()).toList(),
-        'totalPrice': cart.getTotalPrice(),
-        'payment': createdPayment['data']['paymentDetails']['_id'],
-        'status': txnRes?.status == 'success' ? 'pending' : 'payment failed',
-        'destination':
-            locations.firstWhere((element) => element['isDefault'] == true)
-      };
-      await ApiService.request('/order', method: 'POST', body: orderBody);
-
-      if (txnRes?.status == 'success') cart.emptyCart();
-    }
-
-    bool hasDefaultLocation =
-        auth.authData['locations'].any((item) => item['isDefault'] == true);
-
-=======
->>>>>>> parent of 7425639 (multiple updates)
-=======
->>>>>>> parent of 7425639 (multiple updates)
     return SafeArea(
       child: cart.cartItems.isEmpty
           ? Center(
@@ -163,31 +127,9 @@ class Cart extends StatelessWidget {
                       child: CustomButton(
                         text: hasDefaultLocation ? 'Checkout' : 'Set Location',
                         onPressed: () {
-<<<<<<< HEAD
-                          if (hasDefaultLocation) {
-                            showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15))),
-                                builder: (context) => UpiBottomSheet(
-                                      savePayment: createOrder,
-                                      paymentDetails: {
-                                        'amount': cart.getTotalPrice()
-                                      },
-                                    ));
-                          } else {
-                            Navigator.pushNamed(context, '/location');
-                          }
-=======
                           showModalBottomSheet(
                               context: context,
                               builder: (context) => const UpiBottomSheet());
-<<<<<<< HEAD
->>>>>>> parent of 7425639 (multiple updates)
-=======
->>>>>>> parent of 7425639 (multiple updates)
                         },
                       ),
                     ),
