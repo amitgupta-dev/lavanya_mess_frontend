@@ -43,23 +43,6 @@ class ProductModel {
       updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'createdBy': createdBy,
-      'name': name,
-      'thumbnail': thumbnail,
-      'description': description,
-      'price': price,
-      'type': type,
-      'category': category,
-      'tags': tags,
-      'rating': rating.toJson(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
-  }
 }
 
 class Rating {
@@ -76,12 +59,5 @@ class Rating {
       count: json['count'],
       avg: json['avg']?.toDouble(),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'count': count,
-      'avg': avg,
-    };
   }
 }

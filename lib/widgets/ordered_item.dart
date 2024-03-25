@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lavanya_mess/providers/navigaton_provider.dart';
-import 'package:lavanya_mess/services/api_services.dart';
-import 'package:lavanya_mess/utils/toast.dart';
-import 'package:provider/provider.dart';
 
 class OrderedItem extends StatelessWidget {
-  final dynamic order;
-
-  final Function? onUpdate;
-
-  const OrderedItem({super.key, required this.order, this.onUpdate});
+  const OrderedItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    NavigationProvider navigator = Provider.of<NavigationProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Material(
@@ -30,63 +21,57 @@ class OrderedItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
+                const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       flex: 1,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 5),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              order['products']
-                                  .map((item) =>
-                                      '${item['product']['name']} × ${item['quantity'].toString()} ')
-                                  .join(','),
-                              maxLines: 3,
+                              'Chicken Curry × 2, Mater Paneer × 1, Saahi Pulaao × 3',
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: [
-                                  const Text(
-                                    'Total : ',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xcc000000),
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.currency_rupee_outlined,
+                            Row(
+                              children: [
+                                Text(
+                                  'Total : ',
+                                  style: TextStyle(
+                                    fontSize: 16,
                                     color: Color(0xcc000000),
-                                    size: 16,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                  Text(
-                                    order['totalPrice'].toString(),
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Color(0xcc000000)),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                Icon(
+                                  Icons.currency_rupee_outlined,
+                                  color: Color(0xcc000000),
+                                  size: 16,
+                                ),
+                                Text(
+                                  '300',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Color(0xcc000000)),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 20,
                     ),
                     Text(
-                      order['status'].toUpperCase(),
-                      style: const TextStyle(
+                      'Pending',
+                      style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w600,
                         color: Color(0xffff4747),
                       ),
                     ),
@@ -98,8 +83,7 @@ class OrderedItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        DateFormat('EEEE, MMM d, yyyy')
-                            .format(DateTime.parse(order['createdAt'])),
+                        DateFormat('EEEE, MMM d, yyyy').format(DateTime.now()),
                         style: const TextStyle(color: Colors.black54),
                       ),
                     ),
@@ -111,82 +95,20 @@ class OrderedItem extends StatelessWidget {
                           Radius.circular(5),
                         ),
                       ),
-                      child: order['status'] == 'pending'
-                          ? TextButton(
-                              style: ButtonStyle(
-                                padding: MaterialStateProperty.all(
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                                ),
-                              ),
-                              onPressed: () async {
-                                debugPrint('hello');
-                                dynamic response = await ApiService.request(
-                                    '/order/${order['_id']}',
-                                    method: 'PATCH',
-                                    body: {'status': 'cancelled'});
-                                if (response['statusCode'] == 200) {
-                                  onUpdate!();
-                                  if (context.mounted) {
-                                    toast(
-                                      context,
-                                      'Success',
-                                      response['data']['message'],
-                                      const Color.fromARGB(255, 3, 189, 74),
-                                      icon: Icons.check_rounded,
-                                    );
-                                  }
-                                } else {
-                                  if (context.mounted) {
-                                    toast(
-                                      context,
-                                      'Error',
-                                      response['data']['message'],
-                                      const Color.fromARGB(255, 3, 189, 74),
-                                      icon: Icons.error_outline_outlined,
-                                    );
-                                  }
-                                }
-                              },
-                              child: const Text(
-                                'Cancel Order',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          : order['status'] == 'delivered'
-                              ? TextButton(
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                      const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Rate',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : TextButton(
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                      const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    navigator.onIndexChanged(0);
-                                  },
-                                  child: const Text(
-                                    'Reorder',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(horizontal: 10),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          'Cancel Order',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 )

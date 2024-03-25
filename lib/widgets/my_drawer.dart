@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/widgets/location_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    dynamic auth = Provider.of<AuthProvider>(context);
-    debugPrint('hello${auth.authData.toString()}');
+    AuthProvider auth = Provider.of<AuthProvider>(context);
 
     return Drawer(
       child: ListView(
@@ -72,22 +70,6 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(
-              Icons.card_membership_outlined,
-              color: Color(0xddff4747),
-            ),
-            title: const Text(
-              'Subscriptions',
-              style: TextStyle(fontSize: 16),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              Future.delayed(const Duration(microseconds: 1000), () {
-                Navigator.pushNamed(context, '/allsubscriptions');
-              });
-            },
-          ),
-          ListTile(
-            leading: const Icon(
               Icons.payments_outlined,
               color: Color(0xddff4747),
             ),
@@ -106,9 +88,7 @@ class MyDrawer extends StatelessWidget {
               'Help & Support',
               style: TextStyle(fontSize: 16),
             ),
-            onTap: () {
-              Navigator.pushNamed(context, '/helpandsupport');
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: const Icon(
@@ -119,9 +99,7 @@ class MyDrawer extends StatelessWidget {
               'About Us',
               style: TextStyle(fontSize: 16),
             ),
-            onTap: () {
-              Navigator.pushNamed(context, '/aboutus');
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: const Icon(
@@ -132,16 +110,7 @@ class MyDrawer extends StatelessWidget {
               'Rate Us',
               style: TextStyle(fontSize: 16),
             ),
-            onTap: () async {
-              const String appPackage = 'com.example.lavanya_mess';
-              final Uri url = Uri.parse(
-                  'https://play.google.com/store/apps/details?id=$appPackage');
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url);
-              } else {
-                throw 'Could not launch $url';
-              }
-            },
+            onTap: () {},
           ),
           ListTile(
             leading: const Icon(
@@ -152,9 +121,7 @@ class MyDrawer extends StatelessWidget {
               'Logout',
               style: TextStyle(fontSize: 16),
             ),
-            onTap: () {
-              auth.logout(context);
-            },
+            onTap: () {},
           ),
         ],
       ),

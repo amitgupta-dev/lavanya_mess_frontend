@@ -35,69 +35,15 @@ class _OnboardingState extends State<Onboarding> {
             children: [
               Container(
                 color: const Color(0xFFff4747),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: const Offset(0, -50),
-                      child: Image.asset(
-                        'assets/images/order.png',
-                        width: 300,
-                      ),
-                    ),
-                    const Text(
-                      'Easy Orders',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
+                child: const Center(child: Text('Welcome')),
               ),
               Container(
                 color: const Color(0xFFff4747),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: const Offset(0, -50),
-                      child: Image.asset(
-                        'assets/images/scooter.png',
-                        width: 350,
-                      ),
-                    ),
-                    const Text(
-                      'Door Step Delivery',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
+                child: const Center(child: Text('Overview')),
               ),
               Container(
                 color: const Color(0xFFff4747),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: const Offset(0, -50),
-                      child: Image.asset(
-                        'assets/images/mother.png',
-                        width: 250,
-                      ),
-                    ),
-                    const Text(
-                      'Homely Food',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
+                child: const Center(child: Text('About')),
               ),
             ],
           ),
@@ -113,8 +59,6 @@ class _OnboardingState extends State<Onboarding> {
                     width: double.infinity,
                     height: 60,
                     child: TextButton(
-                      style:
-                          TextButton.styleFrom(backgroundColor: Colors.white),
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
                         prefs.setBool('doneBoarding', true);
@@ -142,7 +86,7 @@ class _OnboardingState extends State<Onboarding> {
                         "Get Started",
                         style: TextStyle(
                           fontSize: 18,
-                          color: Color(0xffff4747),
+                          color: Color(0xFFffffff),
                         ),
                       ),
                     ),

@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/providers/navigaton_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:upi_india/upi_india.dart';
 
 class UpiBottomSheet extends StatefulWidget {
-  final Function savePayment;
-  final dynamic paymentDetails;
-  const UpiBottomSheet(
-      {super.key, required this.savePayment, required this.paymentDetails});
+  const UpiBottomSheet({super.key});
 
   @override
   State createState() => _UpiBottomSheetState();
 }
 
 class _UpiBottomSheetState extends State<UpiBottomSheet> {
+  Future<UpiResponse>? _transaction;
   final UpiIndia _upiIndia = UpiIndia();
   List<UpiApp>? apps;
 
@@ -39,15 +35,64 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
     super.initState();
   }
 
-  Future<UpiResponse> initiateTransaction(UpiApp app, double amount) async {
+  Future<UpiResponse> initiateTransaction(UpiApp app) async {
     return _upiIndia.startTransaction(
       app: app,
-      receiverUpiId: '6299195958@icici',
+      receiverUpiId: "paytmqr281005050101xb5r0jp78mel@paytm",
       receiverName: 'Lavanya Mess & Store',
       transactionRefId: 'TestingUpiIndiaPlugin',
       transactionNote: 'Thanks for Shopping',
-      amount: amount,
+      amount: 1.00,
     );
+  }
+
+  Widget displayUpiApps() {
+    if (apps == null) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (apps!.isEmpty) {
+      return Center(
+        child: Text(
+          "No apps found to handle transaction.",
+          style: header,
+        ),
+      );
+    } else {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Wrap(
+            children: apps!.map<Widget>((UpiApp app) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _transaction = initiateTransaction(app);
+                    debugPrint(_transaction.toString());
+                  });
+                  debugPrint('nahi ho paya bhai' + _transaction.toString());
+                },
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.memory(
+                        app.icon,
+                        height: 60,
+                        width: 60,
+                      ),
+                      Text(app.name),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    }
   }
 
   String _upiErrorHandler(error) {
@@ -65,6 +110,7 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
     }
   }
 
+<<<<<<< HEAD
   @override
   Widget build(BuildContext context) {
     NavigationProvider navigate = Provider.of<NavigationProvider>(context);
@@ -120,6 +166,37 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
           }).toList(),
         ),
       );
+=======
+  void _checkTxnStatus(String status) {
+    switch (status) {
+      case UpiPaymentStatus.SUBMITTED:
+        debugPrint('Transaction Submitted');
+        break;
+      case UpiPaymentStatus.SUCCESS:
+        debugPrint('Transaction Successful');
+        break;
+      case UpiPaymentStatus.FAILURE:
+        debugPrint('Transaction Failed');
+        break;
+      default:
+        debugPrint('Received an Unknown transaction status');
+>>>>>>> parent of 7425639 (multiple updates)
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Pay Using'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: displayUpiApps(),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
-import 'package:lavanya_mess/services/api_services.dart';
 import 'package:lavanya_mess/widgets/cart_item.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/upi_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:upi_india/upi_response.dart';
 
 class Cart extends StatelessWidget {
   const Cart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final AuthProvider auth = Provider.of<AuthProvider>(context);
     final CartProvider cart = Provider.of<CartProvider>(context);
 
     final screenHeight = MediaQuery.of(context).size.height;
     final screenwidth = MediaQuery.of(context).size.width;
     final double size =
         (screenHeight < screenwidth ? screenHeight : screenwidth) / 2;
+<<<<<<< HEAD
 
     void createOrder({UpiResponse? txnRes}) async {
       Map<String, dynamic> paymentBody = {
@@ -51,6 +48,8 @@ class Cart extends StatelessWidget {
     bool hasDefaultLocation =
         auth.authData['locations'].any((item) => item['isDefault'] == true);
 
+=======
+>>>>>>> parent of 7425639 (multiple updates)
     return SafeArea(
       child: cart.cartItems.isEmpty
           ? Center(
@@ -66,7 +65,7 @@ class Cart extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: const Image(
                       image: AssetImage(
-                        'assets/images/empty_cart.jpg',
+                        '/assets/images/empty_cart.jpg',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -161,6 +160,7 @@ class Cart extends StatelessWidget {
                       child: CustomButton(
                         text: hasDefaultLocation ? 'Checkout' : 'Set Location',
                         onPressed: () {
+<<<<<<< HEAD
                           if (hasDefaultLocation) {
                             showModalBottomSheet(
                                 context: context,
@@ -177,6 +177,11 @@ class Cart extends StatelessWidget {
                           } else {
                             Navigator.pushNamed(context, '/location');
                           }
+=======
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) => const UpiBottomSheet());
+>>>>>>> parent of 7425639 (multiple updates)
                         },
                       ),
                     ),

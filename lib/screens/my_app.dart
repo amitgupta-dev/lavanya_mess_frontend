@@ -6,11 +6,8 @@ import 'package:lavanya_mess/screens/auth_screens/signup.dart';
 import 'package:lavanya_mess/screens/auth_screens/splash_screen.dart';
 import 'package:lavanya_mess/screens/auth_screens/onboarding.dart';
 import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
-import 'package:lavanya_mess/screens/others/all_subscriptions.dart';
-import 'package:lavanya_mess/screens/others/help_and_support.dart';
 import 'package:lavanya_mess/screens/others/location.dart';
 import 'package:lavanya_mess/screens/others/plans.dart';
-import 'package:lavanya_mess/screens/others/about_us.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,9 +27,6 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const Dashboard(),
         '/location': (context) => const Location(),
         '/plans': (context) => const Plans(),
-        '/aboutus': (context) => const AboutUs(),
-        '/helpandsupport': (context) => const HelpAndSupport(),
-        '/allsubscriptions': (context) => const AllSubscriptions(),
       },
     );
   }

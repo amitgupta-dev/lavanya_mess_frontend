@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/mess_plan.dart';
+<<<<<<< HEAD
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/providers/util_states_provider.dart';
+=======
+>>>>>>> parent of 7425639 (multiple updates)
 import 'package:lavanya_mess/screens/others/menu.dart';
 import 'package:lavanya_mess/services/api_services.dart';
-import 'package:lavanya_mess/widgets/custom_button.dart';
-import 'package:lavanya_mess/widgets/upi_bottom_sheet.dart';
-import 'package:provider/provider.dart';
-import 'package:upi_india/upi_response.dart';
 
 class Plans extends StatefulWidget {
   const Plans({super.key});
@@ -18,8 +17,6 @@ class Plans extends StatefulWidget {
 
 class _PlansState extends State<Plans> {
   List<MessPlanModel> plans = [];
-  String selectedPlanId = '';
-  // double planPrice = 0;
   @override
   void initState() {
     super.initState();
@@ -35,6 +32,7 @@ class _PlansState extends State<Plans> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final AuthProvider auth = Provider.of<AuthProvider>(context);
     final UtilStateProvider utilStates =
         Provider.of<UtilStateProvider>(context);
@@ -72,6 +70,8 @@ class _PlansState extends State<Plans> {
     bool hasDefaultLocation =
         auth.authData['locations'].any((item) => item['isDefault'] == true);
 
+=======
+>>>>>>> parent of 7425639 (multiple updates)
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -83,6 +83,7 @@ class _PlansState extends State<Plans> {
           ),
         ),
       ),
+<<<<<<< HEAD
       body: Column(
         children: [
           Expanded(
@@ -142,6 +143,22 @@ class _PlansState extends State<Plans> {
                 )
               : Container(),
         ],
+=======
+      body: Center(
+        child: Column(
+          children: [
+            ListView.builder(
+              itemCount: plans.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Plan(
+                  data: plans[index],
+                );
+              },
+            )
+          ],
+        ),
+>>>>>>> parent of 7425639 (multiple updates)
       ),
     );
   }
@@ -149,121 +166,98 @@ class _PlansState extends State<Plans> {
 
 class Plan extends StatelessWidget {
   final MessPlanModel data;
-  final Border border;
 
   const Plan({
     super.key,
     required this.data,
-    required this.border,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
-        image: DecorationImage(
-            image: NetworkImage(data.banner), fit: BoxFit.cover),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(225, 225, 225, 0.3),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          border: border,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.currency_rupee_outlined,
-                    ),
-                    Text(
-                      data.price.round().toString(),
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(
-                    data.name.toUpperCase(),
+          border: Border.all(color: Colors.black12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.currency_rupee_outlined,
+                  ),
+                  Text(
+                    data.price.toString(),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 22,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                ],
+              ),
+              Text(
+                data.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
+              ),
+            ],
+          ),
+          Text(
+            '${data.timesADay} times a day',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    '${data.timesADay} meals a day',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+          ),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Menu(
+                      plan: data,
                     ),
                   ),
-                ),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Menu(
-                            plan: data,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.black54)),
-                      child: const Padding(
-                        padding: EdgeInsets.only(top: 2, bottom: 2, left: 10),
-                        child: Row(
-                          children: [
-                            Text(
-                              'See Menu',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Icon(
-                              Icons.navigate_next_outlined,
-                            ),
-                          ],
+                );
+              },
+              child: const SizedBox(
+                width: 100,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      Text(
+                        'See Menu',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
+                      Icon(
+                        Icons.navigate_next_outlined,
+                        color: Colors.black54,
+                      ),
+                    ],
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

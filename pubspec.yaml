@@ -46,8 +46,6 @@ dependencies:
   geolocator: ^10.1.1
   uuid: ^4.3.3
   upi_india: ^3.0.1
-  url_launcher: ^6.2.5
-  motion_toast: ^2.8.0
 
 dev_dependencies:
   flutter_test:

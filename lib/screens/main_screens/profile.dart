@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
-import 'package:lavanya_mess/services/api_services.dart';
-import 'package:lavanya_mess/utils/toast.dart';
 import 'package:lavanya_mess/widgets/custom_button.dart';
 import 'package:lavanya_mess/widgets/custom_input.dart';
 import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
-    return Child(data: auth.authData);
-  }
+  State<Profile> createState() => _ProfileState();
 }
 
-class Child extends StatefulWidget {
-  final Map<String, dynamic> data;
-  const Child({super.key, required this.data});
-
-  @override
-  State<Child> createState() => _ChildState();
-}
-
-class _ChildState extends State<Child> {
+class _ProfileState extends State<Profile> {
   Map<String, dynamic> updates = {
     "avatar": "",
     "name": "",
@@ -37,6 +24,7 @@ class _ChildState extends State<Child> {
 
   @override
   void initState() {
+<<<<<<< HEAD
     super.initState();
     updates['avatar'] = widget.data["avatar"];
     updates['name'] = widget.data["name"];
@@ -46,12 +34,33 @@ class _ChildState extends State<Child> {
       updates['dob'] = DateTime.parse(widget.data["dob"]);
     }
     updates['gender'] = widget.data["gender"];
+=======
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
+
+      setState(() {
+        updates['name'] = auth.authData["name"];
+        updates['email'] = auth.authData["email"];
+        updates['phone'] = auth.authData["phone"];
+        updates['dob'] = auth.authData["dob"];
+        updates['gender'] = auth.authData["gender"];
+      });
+      debugPrint(updates.toString());
+    });
+
+    super.initState();
+>>>>>>> parent of 7425639 (multiple updates)
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     AuthProvider auth = Provider.of<AuthProvider>(context);
     TextEditingController dateInputController = TextEditingController();
+=======
+    TextEditingController datePickerController = TextEditingController();
+    debugPrint(updates.toString());
+>>>>>>> parent of 7425639 (multiple updates)
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -97,11 +106,6 @@ class _ChildState extends State<Child> {
                           child: CustomInputWidget(
                             labelText: 'Name',
                             value: updates['name'],
-                            onChanged: (value) {
-                              setState(() {
-                                updates['name'] = value;
-                              });
-                            },
                           ),
                         ),
                         Padding(
@@ -109,11 +113,6 @@ class _ChildState extends State<Child> {
                           child: CustomInputWidget(
                             labelText: 'Email',
                             value: updates['email'],
-                            onChanged: (value) {
-                              setState(() {
-                                updates['email'] = value;
-                              });
-                            },
                           ),
                         ),
                         Padding(
@@ -121,106 +120,46 @@ class _ChildState extends State<Child> {
                           child: CustomInputWidget(
                             labelText: 'Phone',
                             value: updates['phone'].toString(),
-                            onChanged: (value) {
-                              setState(() {
-                                updates['phone'] = int.parse(value);
-                              });
-                            },
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 6, bottom: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
                           child: InkWell(
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                 context: context,
                                 lastDate: DateTime.now(),
                                 firstDate: DateTime(1950),
-                                initialDate: updates['dob'],
+                                initialDate: DateTime.now(),
                               );
                               if (pickedDate == null) return;
-                              dateInputController.text =
-                                  DateFormat('dd/MM/yyyy')
-                                      .format(updates['dob'])
-                                      .toString();
+                              datePickerController.text =
+                                  DateFormat('dd/mm/yyyy').format(pickedDate);
                               setState(() {
                                 updates['dob'] =
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        (pickedDate.millisecondsSinceEpoch /
-                                                    1000)
-                                                .round() *
-                                            1000);
+                                    (pickedDate.millisecondsSinceEpoch / 1000)
+                                        .round();
                               });
                             },
                             child: AbsorbPointer(
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1.0,
-                                    color: Colors.black38,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(
-                                    DateFormat('dd/MM/yyyy')
-                                        .format(updates['dob'])
-                                        .toString(),
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ),
+                              child: CustomInputWidget(
+                                labelText: 'DOB',
+                                readOnly: true,
+                                inputType: TextInputType.datetime,
+                                value: updates['dob'] != null
+                                    ? DateFormat('dd/MM/yyyy').format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            updates['dob'] * 1000))
+                                    : "",
                               ),
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: DropdownButtonFormField<String>(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: CustomInputWidget(
+                            labelText: 'Gender',
                             value: updates['gender'],
-                            items: const [
-                              DropdownMenuItem(
-                                value: "Male",
-                                child: Text(
-                                  "Male",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: "Female",
-                                child: Text(
-                                  "Female",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
-                                ),
-                              ),
-                              DropdownMenuItem(
-                                value: "Others",
-                                child: Text(
-                                  "Others",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black87),
-                                ),
-                              ),
-                            ],
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                updates['gender'] = newValue;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: "Gender",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 12),
-                            ),
                           ),
                         ),
                         Padding(
@@ -228,28 +167,7 @@ class _ChildState extends State<Child> {
                           child: CustomButton(
                               text: 'Update',
                               onPressed: () {
-                                ApiService.request('/user',
-                                    method: 'PATCH',
-                                    body: {
-                                      ...updates,
-                                      'dob': updates['dob'].toIso8601String()
-                                    }).then((response) {
-                                  debugPrint(response.toString());
-                                  response['statusCode'] == 200
-                                      ? toast(
-                                          context,
-                                          'Success',
-                                          response['data']['message'],
-                                          const Color.fromARGB(255, 3, 189, 74),
-                                          icon: Icons.check_rounded)
-                                      : toast(
-                                          context,
-                                          'Error',
-                                          response['data']['message'],
-                                          const Color(0xffff4747),
-                                          icon: Icons.error_outline_outlined);
-                                  auth.fetchMyData();
-                                });
+                                debugPrint(updates.toString());
                               }),
                         ),
                       ],

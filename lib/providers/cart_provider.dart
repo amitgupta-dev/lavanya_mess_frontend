@@ -34,9 +34,12 @@ class CartProvider extends ChangeNotifier {
   decreaseQuantity(String itemId) {
     final updatedList = _cartItems
         .map((item) => item.product.id == itemId
-            ? CartItemModel(product: item.product, quantity: --item.quantity)
+            ? CartItemModel(
+                product: item.product,
+                quantity: item.quantity == 1
+                    ? removeProduct(itemId)
+                    : --item.quantity)
             : item)
-        .where((item) => item.quantity > 0)
         .toList();
 
     _cartItems = updatedList;
@@ -61,8 +64,7 @@ class CartProvider extends ChangeNotifier {
 
   double getDiscount() {
     double discountPercentage = 0.10;
-    return double.parse(
-        (getTotalPrice() * discountPercentage).toStringAsFixed(1));
+    return getTotalPrice() * discountPercentage;
   }
 
   void emptyCart() {
