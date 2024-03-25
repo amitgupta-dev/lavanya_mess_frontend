@@ -18,6 +18,7 @@ class Cart extends StatelessWidget {
     final double size =
         (screenHeight < screenwidth ? screenHeight : screenwidth) / 2;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     void createOrder({UpiResponse? txnRes}) async {
       Map<String, dynamic> paymentBody = {
@@ -48,6 +49,8 @@ class Cart extends StatelessWidget {
     bool hasDefaultLocation =
         auth.authData['locations'].any((item) => item['isDefault'] == true);
 
+=======
+>>>>>>> parent of 7425639 (multiple updates)
 =======
 >>>>>>> parent of 7425639 (multiple updates)
     return SafeArea(
@@ -181,6 +184,9 @@ class Cart extends StatelessWidget {
                           showModalBottomSheet(
                               context: context,
                               builder: (context) => const UpiBottomSheet());
+<<<<<<< HEAD
+>>>>>>> parent of 7425639 (multiple updates)
+=======
 >>>>>>> parent of 7425639 (multiple updates)
                         },
                       ),

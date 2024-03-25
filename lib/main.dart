@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() {
 <<<<<<< HEAD
+<<<<<<< HEAD
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (value) => runApp(
@@ -23,6 +24,8 @@ void main() {
         child: const MyApp(),
       ),
 =======
+=======
+>>>>>>> parent of 7425639 (multiple updates)
   runApp(
     MultiProvider(
       providers: [
@@ -31,6 +34,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => NavigationProvider()),
       ],
       child: const MyApp(),
+<<<<<<< HEAD
+>>>>>>> parent of 7425639 (multiple updates)
+=======
 >>>>>>> parent of 7425639 (multiple updates)
     ),
   );

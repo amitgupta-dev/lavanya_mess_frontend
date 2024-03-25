@@ -111,6 +111,7 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   @override
   Widget build(BuildContext context) {
     NavigationProvider navigate = Provider.of<NavigationProvider>(context);
@@ -167,6 +168,8 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
         ),
       );
 =======
+=======
+>>>>>>> parent of 7425639 (multiple updates)
   void _checkTxnStatus(String status) {
     switch (status) {
       case UpiPaymentStatus.SUBMITTED:
@@ -180,6 +183,9 @@ class _UpiBottomSheetState extends State<UpiBottomSheet> {
         break;
       default:
         debugPrint('Received an Unknown transaction status');
+<<<<<<< HEAD
+>>>>>>> parent of 7425639 (multiple updates)
+=======
 >>>>>>> parent of 7425639 (multiple updates)
     }
   }

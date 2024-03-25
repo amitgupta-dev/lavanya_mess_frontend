@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/mess_plan.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/providers/util_states_provider.dart';
+=======
+>>>>>>> parent of 7425639 (multiple updates)
 =======
 >>>>>>> parent of 7425639 (multiple updates)
 import 'package:lavanya_mess/screens/others/menu.dart';
@@ -32,6 +35,7 @@ class _PlansState extends State<Plans> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
     final AuthProvider auth = Provider.of<AuthProvider>(context);
     final UtilStateProvider utilStates =
@@ -72,6 +76,8 @@ class _PlansState extends State<Plans> {
 
 =======
 >>>>>>> parent of 7425639 (multiple updates)
+=======
+>>>>>>> parent of 7425639 (multiple updates)
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -83,6 +89,7 @@ class _PlansState extends State<Plans> {
           ),
         ),
       ),
+<<<<<<< HEAD
 <<<<<<< HEAD
       body: Column(
         children: [
@@ -144,6 +151,8 @@ class _PlansState extends State<Plans> {
               : Container(),
         ],
 =======
+=======
+>>>>>>> parent of 7425639 (multiple updates)
       body: Center(
         child: Column(
           children: [
@@ -158,6 +167,9 @@ class _PlansState extends State<Plans> {
             )
           ],
         ),
+<<<<<<< HEAD
+>>>>>>> parent of 7425639 (multiple updates)
+=======
 >>>>>>> parent of 7425639 (multiple updates)
       ),
     );
