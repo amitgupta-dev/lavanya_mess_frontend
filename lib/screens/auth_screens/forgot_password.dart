@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/widgets/auth_layout.dart';
-import 'package:lavanya_mess/widgets/custom_button.dart';
-import 'package:lavanya_mess/widgets/custom_input.dart';
+import 'package:lavanya_mess/widgets/layout/auth_layout.dart';
+import 'package:lavanya_mess/widgets/components/custom_button.dart';
+import 'package:lavanya_mess/widgets/components/custom_input.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});

@@ -52,7 +52,7 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                   const Row(
                     children: [
                       Icon(
-                        size: 18,
+                        size: 20,
                         Icons.my_location_outlined,
                         color: Color(0xaa000000),
                       ),
@@ -62,6 +62,7 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                       Text(
                         'Current Location',
                         style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xaa000000),
                         ),
@@ -79,7 +80,7 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                     child: const Row(
                       children: [
                         Icon(
-                          size: 18,
+                          size: 20,
                           Icons.map_outlined,
                           color: Color(0xaa000000),
                         ),
@@ -89,6 +90,7 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                         Text(
                           'Choose on map',
                           style: TextStyle(
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xaa000000),
                           ),
@@ -99,53 +101,47 @@ class _LocationBottomSheetState extends State<LocationBottomSheet> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Saved Addresses'),
-                  ),
-                  Expanded(child: Divider())
-                ],
-              ),
-            ),
-            Consumer<AuthProvider>(
-              builder: (context, auth, child) {
-                if (auth.authData != null) {
-                  return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: auth.authData['locations'].length,
-                        itemBuilder: (context, index) => ListTile(
-                          visualDensity: const VisualDensity(vertical: -4),
-                          title: Text(
-                            auth.authData['locations'][index]['address'],
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xaa000000)),
+            auth.authData['locations'].isNotEmpty
+                ? Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Expanded(child: Divider()),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('Saved Addresses'),
                           ),
-                          onTap: () {
-                            // Handle tap on Item 1
-                          },
+                          Expanded(child: Divider())
+                        ],
+                      ),
+                    ),
+                    Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ));
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: auth.authData['locations'].length,
+                          itemBuilder: (context, index) => ListTile(
+                            visualDensity: const VisualDensity(vertical: -4),
+                            title: Text(
+                              auth.authData['locations'][index]['address'],
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xaa000000)),
+                            ),
+                            onTap: () {
+                              // Handle tap on Item 1
+                            },
+                          ),
+                        ))
+                  ])
+                : Container(),
           ],
         ),
       ),

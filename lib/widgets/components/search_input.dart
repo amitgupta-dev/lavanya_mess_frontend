@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lavanya_mess/widgets/search_bottom_sheet.dart';
+import 'package:lavanya_mess/widgets/bottom_sheets/search_bottom_sheet.dart';
 
 class SearchInput extends StatelessWidget {
   const SearchInput({super.key});

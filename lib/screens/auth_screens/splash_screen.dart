@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/screens/auth_screens/login.dart';
 import 'package:lavanya_mess/screens/auth_screens/onboarding.dart';
 import 'package:lavanya_mess/screens/main_screens/dashboard.dart';
+import 'package:lavanya_mess/utils/toast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -34,18 +35,14 @@ class _SplashScreenState extends State<SplashScreen> {
       String? token = prefs.getString('token');
 
       if (!doneBoarding) {
-        debugPrint(doneBoarding.toString());
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Onboarding()),
         );
       } else {
         if (token != null) {
-          debugPrint(token);
           _auth?.fetchMyData().then((statusCode) {
-            debugPrint(statusCode.toString());
             if (statusCode == 200) {
-              debugPrint(statusCode.toString());
               Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.pushReplacement(
                 context,
@@ -59,21 +56,19 @@ class _SplashScreenState extends State<SplashScreen> {
             }
           }).catchError((error) {
             debugPrint("Error fetching user data: $error");
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error fetching user data: $error'),
-                backgroundColor: Colors.teal,
-                behavior: SnackBarBehavior.floating,
-                action: SnackBarAction(
-                  label: 'Dismiss',
-                  disabledTextColor: Colors.white,
-                  textColor: Colors.yellow,
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  },
-                ),
-              ),
-            );
+            if (error is SocketException) {
+              toast(
+                  context,
+                  'Error',
+                  'No Internet Connection. Please try again later.',
+                  const Color(0xffff4747));
+            } else if (error is TimeoutException) {
+              toast(context, 'Error', 'An error occurred',
+                  const Color(0xffff4747));
+            } else {
+              toast(context, 'Error', 'An error occurred',
+                  const Color(0xffff4747));
+            }
           });
         } else {
           Navigator.push(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
-import 'package:lavanya_mess/widgets/auth_layout.dart';
-import 'package:lavanya_mess/widgets/custom_button.dart';
-import 'package:lavanya_mess/widgets/custom_input.dart';
+import 'package:lavanya_mess/widgets/layout/auth_layout.dart';
+import 'package:lavanya_mess/widgets/components/custom_input.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -46,34 +45,73 @@ class _LoginState extends State<Login> {
             });
           },
         ),
-        CustomButton(
-          text: "Login",
-          onPressed: () {
-            if (_email.isNotEmpty && _password.isNotEmpty) {
-              final Map<String, String> body = {
-                "email": _email,
-                "password": _password
-              };
-              auth.login(context, body);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
-                      'Please fill both the email and password fields'),
-                  backgroundColor: Colors.teal,
-                  behavior: SnackBarBehavior.floating,
-                  action: SnackBarAction(
-                    label: 'Dismiss',
-                    disabledTextColor: Colors.white,
-                    textColor: Colors.yellow,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                  ),
-                ),
-              );
-            }
-          },
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xffff4747),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+              ),
+              child: auth.isAuthenticating
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                          height: 5,
+                        ),
+                        Text(
+                          'Logging in',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
+                    )
+                  : const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+              onPressed: () async {
+                if (_email.isNotEmpty && _password.isNotEmpty) {
+                  final Map<String, String> body = {
+                    "email": _email,
+                    "password": _password
+                  };
+                  await auth.signupLogin(context, body, 'login');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                          'Please fill both the email and password fields'),
+                      backgroundColor: Colors.teal,
+                      behavior: SnackBarBehavior.floating,
+                      action: SnackBarAction(
+                        label: 'Dismiss',
+                        disabledTextColor: Colors.white,
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                      ),
+                    ),
+                  );
+                }
+                return;
+              },
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 10),

@@ -8,14 +8,13 @@ class CustomInputWidget extends StatefulWidget {
   final Function(String)? onChanged;
 
   const CustomInputWidget(
-      {Key? key,
+      {super.key,
       required this.labelText,
       this.value,
       this.inputType =
           TextInputType.text, // Default to TextInputType.text if not provided
       this.onChanged,
-      this.readOnly})
-      : super(key: key);
+      this.readOnly});
 
   @override
   State<CustomInputWidget> createState() => _CustomInputWidgetState();

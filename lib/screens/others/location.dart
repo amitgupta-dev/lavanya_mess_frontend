@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lavanya_mess/models/address.dart';
+import 'package:lavanya_mess/providers/loading_state_provider.dart';
 import 'package:lavanya_mess/services/custom_location.dart';
-import 'package:lavanya_mess/widgets/set_location_bottom_sheet.dart';
+import 'package:lavanya_mess/widgets/bottom_sheets/set_location_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});
@@ -43,18 +45,27 @@ class _LocationState extends State<Location> {
       startDebounceTimer(context);
     });
 
-    CustomLocation.getLocationFromPlaceId(coordinates: _center)
-        .then((response) => {
-              if (response['statusCode'] == 200)
-                setState(() {
-                  fullAddress.address =
-                      response['location']['formatted_address'];
-                  fullAddress.location.coordinates = [
-                    _center.latitude,
-                    _center.longitude
-                  ];
-                })
-            });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LoadingStateProvider loadingState =
+          Provider.of<LoadingStateProvider>(context, listen: false);
+      loadingState.setIsLoading(true);
+      CustomLocation.getLocationFromPlaceId(coordinates: _center)
+          .then((response) => {
+                if (response['statusCode'] == 200)
+                  {
+                    setState(() {
+                      fullAddress.address =
+                          response['location']['formatted_address'];
+                      fullAddress.location.coordinates = [
+                        _center.latitude,
+                        _center.longitude
+                      ];
+                    })
+                  },
+                loadingState.setIsLoading(false)
+              });
+    });
+
     super.initState();
   }
 
@@ -84,6 +95,8 @@ class _LocationState extends State<Location> {
 
   @override
   Widget build(BuildContext context) {
+    LoadingStateProvider loadingState =
+        Provider.of<LoadingStateProvider>(context);
     Timer? idleTimer;
 
     return Scaffold(
@@ -118,7 +131,9 @@ class _LocationState extends State<Location> {
                       ),
                       onCameraMove: (cameraPosition) {
                         idleTimer?.cancel();
-                        idleTimer = Timer(const Duration(seconds: 2), () async {
+
+                        idleTimer = Timer(const Duration(seconds: 1), () async {
+                          loadingState.setIsLoading(true);
                           // No interaction for 2 seconds, get location
                           setState(() {
                             _center = LatLng(cameraPosition.target.latitude,
@@ -128,6 +143,7 @@ class _LocationState extends State<Location> {
                               cameraPosition.target.longitude
                             ];
                           });
+
                           dynamic response =
                               await CustomLocation.getLocationFromPlaceId(
                                   coordinates: _center);
@@ -139,23 +155,26 @@ class _LocationState extends State<Location> {
                               _controller.text = '';
                             });
                           }
+                          loadingState.setIsLoading(false);
                           debugPrint('camera moved: $_center');
                         });
                       },
                     ),
-                    const Positioned(
+                    Positioned(
                       // Center the image horizontally and vertically
                       left: 0.0,
                       right: 0.0,
                       top: 0.0,
                       bottom: 53.0,
                       child: Center(
-                        child: Image(
-                          image: AssetImage(
-                            'assets/icons/marker.png',
-                          ),
-                          width: 60,
-                        ),
+                        child: loadingState.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Image(
+                                image: AssetImage(
+                                  'assets/icons/marker.png',
+                                ),
+                                width: 60,
+                              ),
                       ),
                     ),
                     placesList.length != 0
@@ -271,6 +290,7 @@ class _LocationState extends State<Location> {
                       child: FloatingActionButton(
                         backgroundColor: Colors.white,
                         onPressed: () async {
+                          loadingState.setIsLoading(true);
                           LatLng newlatlang =
                               await CustomLocation.currentLocation();
                           setState(() {
@@ -291,6 +311,7 @@ class _LocationState extends State<Location> {
                               CameraPosition(target: newlatlang, zoom: 16.0),
                             ),
                           );
+                          loadingState.setIsLoading(false);
                         },
                         child: const Icon(
                           Icons.gps_fixed_outlined,

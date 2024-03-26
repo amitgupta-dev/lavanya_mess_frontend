@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/product_model.dart';
-import 'package:lavanya_mess/widgets/product_bottom_sheet.dart';
+import 'package:lavanya_mess/widgets/bottom_sheets/product_bottom_sheet.dart';
 
 class SearchItem extends StatelessWidget {
   final ProductModel data;

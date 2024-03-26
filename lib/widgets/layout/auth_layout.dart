@@ -4,8 +4,7 @@ class AuthLayout extends StatelessWidget {
   final Widget heading;
   final List<Widget> children;
 
-  const AuthLayout({Key? key, required this.children, required this.heading})
-      : super(key: key);
+  const AuthLayout({super.key, required this.children, required this.heading});
 
   @override
   Widget build(BuildContext context) {

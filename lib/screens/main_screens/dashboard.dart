@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
 import 'package:lavanya_mess/providers/navigaton_provider.dart';
-import 'package:lavanya_mess/widgets/my_drawer.dart';
+import 'package:lavanya_mess/widgets/navComponents/my_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();

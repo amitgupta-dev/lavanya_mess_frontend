@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/product_model.dart';
 import 'package:lavanya_mess/providers/cart_provider.dart';
 import 'package:lavanya_mess/providers/navigaton_provider.dart';
-import 'package:lavanya_mess/widgets/product_bottom_sheet.dart';
+import 'package:lavanya_mess/widgets/bottom_sheets/product_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class Product extends StatelessWidget {
@@ -40,13 +40,33 @@ class Product extends StatelessWidget {
                 flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                          image: NetworkImage(productData.thumbnail),
-                          fit: BoxFit.cover),
-                    ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          image: DecorationImage(
+                              image: NetworkImage(productData.thumbnail),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.black45,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text(
+                          '₹${productData.price.toString()}',
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -56,7 +76,6 @@ class Product extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: SizedBox(
                     child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
@@ -118,7 +137,7 @@ class Product extends StatelessWidget {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                      fontSize: 13, color: Colors.black45),
+                                      fontSize: 14, color: Colors.black45),
                                 ),
                               ),
                               const SizedBox(
@@ -126,6 +145,7 @@ class Product extends StatelessWidget {
                               ),
                               cart.inCart(productData.id)
                                   ? Container(
+                                      height: 40,
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 6),
                                       decoration: const BoxDecoration(
@@ -160,6 +180,7 @@ class Product extends StatelessWidget {
                                       ),
                                     )
                                   : Container(
+                                      height: 40,
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 6),
                                       decoration: const BoxDecoration(

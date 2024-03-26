@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/address.dart';
 import 'package:lavanya_mess/providers/auth_provider.dart';
 import 'package:lavanya_mess/services/api_services.dart';
-import 'package:lavanya_mess/widgets/custom_button.dart';
-import 'package:lavanya_mess/widgets/custom_input.dart';
+import 'package:lavanya_mess/utils/toast.dart';
+import 'package:lavanya_mess/widgets/components/custom_button.dart';
+import 'package:lavanya_mess/widgets/components/custom_input.dart';
 import 'package:provider/provider.dart';
 
 class SetLocationBottomSheet extends StatefulWidget {
@@ -124,7 +125,14 @@ class _SetLocationBottomSheetState extends State<SetLocationBottomSheet> {
                       ]
                     }).then((response) {
                       auth.fetchMyData();
+                      toast(context, 'Success', "Location has been added",
+                          const Color.fromARGB(255, 3, 189, 74),
+                          icon: Icons.check_rounded);
                       Navigator.pushNamed(context, '/dashboard');
+                    }).catchError((error) {
+                      toast(context, 'Failed', 'Something went wrong',
+                          const Color(0xffff4747),
+                          icon: Icons.check_rounded);
                     });
                   },
                 ),

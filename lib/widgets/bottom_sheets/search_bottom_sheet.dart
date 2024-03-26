@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lavanya_mess/models/product_model.dart';
 import 'package:lavanya_mess/services/api_services.dart';
-import 'package:lavanya_mess/widgets/search_item.dart';
+import 'package:lavanya_mess/widgets/cards/search_item.dart';
 
 class SearchBottomSheet extends StatefulWidget {
   const SearchBottomSheet({super.key});
@@ -17,7 +17,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
 
   final _searchQueryController = TextEditingController();
   Timer? _debounce;
-  final int _debounceTime = 2000;
+  final int _debounceTime = 1000;
 
   @override
   void initState() {
@@ -98,9 +98,7 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                   child: SingleChildScrollView(
                     child: Wrap(
                       children: [
-                        ...products
-                            .map((item) => SearchItem(data: item))
-                            .toList()
+                        ...products.map((item) => SearchItem(data: item))
                       ],
                     ),
                   ),
